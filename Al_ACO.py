@@ -12,22 +12,22 @@ class Ant(object):
 
 class ACO:
 
-    def __init__(self,adjacency, switches, src, dst, N, generation, MAX_PATHS, p, a, b, p0, Q):
+    def __init__(self,adjacency, switches, src, dst, N, iterations, K_paths, p, a, b, p0, Q):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
         self.dst = dst
-        self.weight_map= self.get_weight_map()
+        self.weight_map= self.GetWeightMap()
         self.N = N
-        self.generation = generation
-        self.MAX_PATHS = MAX_PATHS
+        self.iterations = iterations
+        self.K_paths = K_paths
         self.p = p
         self.a = a
         self.b = b
         self.p0 = p0
         self.Q = Q
         self.colony = [Ant() for i in range(self.N)]
-        self.bests = []
+        self.condidates = []
         self.best = []
         self.pheromone = self.CreatePheromone()
         self.probability = self.CreateProbability()
@@ -46,7 +46,7 @@ class ACO:
                 probability[sw_1][sw_2] = 0
         return probability
     
-    def get_weight_map(self):
+    def GetWeightMap(self):
         weight_map={}
         temp = 0
         with open('metric_data_2.txt') as f:
@@ -125,45 +125,47 @@ class ACO:
                 self.pheromone[p1][p2] += self.colony[i].delta*self.Q
                 self.pheromone[p2][p1] += self.colony[i].delta*self.Q
      
-    def Memorize_best(self):
+    def MemorizeCondidates(self):
         self.colony.sort(key=lambda x: x.fitness)
-        self.bests.append(copy.deepcopy(self.colony[0]))
+        self.condidates.append(copy.deepcopy(self.colony[0]))
         k=1
         for i in range(1,len(self.colony)):
             dk_3 = False
-            for Ant in self.bests:
+            for Ant in self.condidates:
                 if(tuple(Ant.path)==tuple(self.colony[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.bests.append(copy.deepcopy(self.colony[i]))
+                self.condidates.append(copy.deepcopy(self.colony[i]))
                 k=k+1
-            if(k==self.MAX_PATHS):
+            if(k==self.K_paths):
                 break
-    
-    def Do(self):
-        for i in range(self.generation):
-            self.CreatePath()
-            self.UpdatePheromone()
-            self.Memorize_best()
-        self.bests.sort(key=lambda x: x.fitness)
-        self.best.append(copy.deepcopy(self.bests[0]))
+    def GetBest(self):
+        self.condidates.sort(key=lambda x: x.fitness)
+        self.best.append(copy.deepcopy(self.condidates[0]))
         k=1
-        for i in range(1,len(self.bests)):
+        for i in range(1,len(self.condidates)):
             dk_3 = False
-            for Ant in self.best:
-                if(tuple(Ant.path)==tuple(self.bests[i].path)):
+            for ant in self.best:
+                if(tuple(ant.path)==tuple(self.condidates[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.best.append(copy.deepcopy(self.bests[i]))
+                self.best.append(copy.deepcopy(self.condidates[i]))
                 k=k+1
-            if(k==self.MAX_PATHS):
+            if(k==self.K_paths):
                 break
         f1=open("wires.txt","w")
         f1.truncate(0)
-        for i in range(self.MAX_PATHS):
+        for i in range(self.K_paths):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
+
+    def Do(self):
+        for i in range(self.iterations):
+            self.CreatePath()
+            self.UpdatePheromone()
+            self.MemorizeCondidates()
+        self.GetBest()

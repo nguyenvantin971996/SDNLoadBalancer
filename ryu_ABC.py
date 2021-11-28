@@ -72,9 +72,9 @@ class ProjectController(app_manager.RyuApp):
         if(len(self.paths)==0):
             alg = ABC(self.adjacency,self.switches,src,dst,50,10,MAX_PATHS)
             alg.Do()
-            for gen in alg.best:
-                self.paths.append(gen.chromosomes)
-                self.pw.append(gen.fitness)
+            for solution in alg.best:
+                self.paths.append(solution.path)
+                self.pw.append(solution.fitness)
         if(self.paths[0][0]!=src):
             for i in range(MAX_PATHS):
                 self.paths[i].reverse()

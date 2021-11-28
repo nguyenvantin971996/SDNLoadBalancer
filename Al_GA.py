@@ -10,22 +10,22 @@ class Genome(object):
 
 class GA:
 
-    def __init__(self,adjacency, switches, src, dst, N, generation, Pc, Pm, MAX_PATHS):
+    def __init__(self,adjacency, switches, src, dst, N, iterations, Pc, Pm, K_paths):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
         self.dst = dst
-        self.weight_map= self.get_weight_map()
+        self.weight_map= self.GetWeightMap()
         self.N = N
-        self.generation = generation
+        self.iterations = iterations
         self.Pm = Pm
         self.Pc = Pc
-        self.MAX_PATHS = MAX_PATHS
+        self.K_paths = K_paths
         self.population = [self.CreateGenome() for i in range(self.N)]
-        self.bests = []
+        self.condidates = []
         self.best = []
     
-    def get_weight_map(self):
+    def GetWeightMap(self):
         weight_map={}
         temp = 0
         with open('metric_data_2.txt') as f:
@@ -138,46 +138,49 @@ class GA:
                 selected_population.append(self.population[k_2])
         self.population = copy.deepcopy(selected_population)
     
-    def Memorize_best(self):
+    def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
-        self.bests.append(copy.deepcopy(self.population[0]))
+        self.condidates.append(copy.deepcopy(self.population[0]))
         k=1
         for i in range(1,len(self.population)):
             dk_3 = False
-            for genome in self.bests:
+            for genome in self.condidates:
                 if(tuple(genome.chromosomes)==tuple(self.population[i].chromosomes)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.bests.append(copy.deepcopy(self.population[i]))
+                self.condidates.append(copy.deepcopy(self.population[i]))
                 k=k+1
-            if(k==self.MAX_PATHS):
+            if(k==self.K_paths):
                 break
     
-    def Do(self):
-        for i in range(self.generation):
-            self.Crossover()
-            self.Mutation()
-            self.Selection()
-            self.Memorize_best()
-        self.bests.sort(key=lambda x: x.fitness)
-        self.best.append(copy.deepcopy(self.bests[0]))
+    def GetBest(self):
+        self.condidates.sort(key=lambda x: x.fitness)
+        self.best.append(copy.deepcopy(self.condidates[0]))
         k=1
-        for i in range(1,len(self.bests)):
+        for i in range(1,len(self.condidates)):
             dk_3 = False
             for genome in self.best:
-                if(tuple(genome.chromosomes)==tuple(self.bests[i].chromosomes)):
+                if(tuple(genome.chromosomes)==tuple(self.condidates[i].chromosomes)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.best.append(copy.deepcopy(self.bests[i]))
+                self.best.append(copy.deepcopy(self.condidates[i]))
                 k=k+1
-            if(k==self.MAX_PATHS):
+            if(k==self.K_paths):
                 break
         f1=open("wires.txt","w")
         f1.truncate(0)
-        for i in range(self.MAX_PATHS):
+        for i in range(self.K_paths):
             stt = ",".join(str(self.weight_map[self.best[i].chromosomes[x]][self.best[i].chromosomes[x+1]]) for x in range(len(self.best[i].chromosomes) - 1))
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
+    
+    def Do(self):
+        for i in range(self.iterations):
+            self.Crossover()
+            self.Mutation()
+            self.Selection()
+            self.MemorizeCondidates()
+        self.GetBest()

@@ -380,7 +380,7 @@ void NetworkMap::changeMetric(QVector<float> metricData)
 
 QPixmap NetworkMap::draw()
 {
-    NetworkMapDrawer drawer(QSize(1366, 1024));
+    NetworkMapDrawer drawer(QSize(1645, 1024));
     drawer.beginDrawing();
     foreach (CSLink *ln, csLinks)
     {

@@ -3,9 +3,9 @@ import random
 import math
 import copy
 
-class Genome(object):
+class Solution(object):
     def __init__(self):
-        self.chromosomes = []
+        self.path = []
         self.code = []
         self.velocity = []
         self.fitness = float('inf')
@@ -15,24 +15,24 @@ class Genome(object):
 
 class PSO:
 
-    def __init__(self,adjacency, switches, src, dst, N, generation, MAX_PATHS, w, c1, c2):
+    def __init__(self,adjacency, switches, src, dst, N, iterations, K_paths, w, c1, c2):
         self.adjacency = adjacency
         self.switches = switches
         self.src = src
         self.dst = dst
-        self.weight_map= self.get_weight_map()
+        self.weight_map= self.GetWeightMap()
         self.N = N
-        self.generation = generation
-        self.MAX_PATHS = MAX_PATHS
-        self.population = [self.CreateGenome() for i in range(self.N)]
-        self.bests = []
+        self.iterations = iterations
+        self.K_paths = K_paths
+        self.population = [self.CreateSolution() for i in range(self.N)]
+        self.condidates = []
         self.best = []
         self.w = w
         self.c1 = c1
         self.c2 = c2
-        self.best_global_genome = self.CreateGenome()
+        self.best_global_solution = self.CreateSolution()
     
-    def get_weight_map(self):
+    def GetWeightMap(self):
         weight_map={}
         temp = 0
         with open('metric_data_2.txt') as f:
@@ -46,32 +46,32 @@ class PSO:
                 temp = my_result[0]
         return weight_map
 
-    def CreateGenome(self):
-        newGenome = Genome()
-        chromosomes=[]
+    def CreateSolution(self):
+        newSolution = Solution()
+        path=[]
         code = []
-        while(len(chromosomes)==0):
+        while(len(path)==0):
             code.clear()
-            chromosomes.clear()
+            path.clear()
             code = copy.deepcopy([random.uniform(-1,1) for i in range(len(self.switches))])
-            chromosomes = copy.deepcopy(self.Decode(code))
-        newGenome.code = copy.deepcopy(code)
-        newGenome.chromosomes = copy.deepcopy(chromosomes)
-        newGenome.velocity = [ i*0.1 for i in newGenome.code]
-        newGenome.fitness = self.Evaluate(newGenome.chromosomes)
-        newGenome.best_local_code= [0 for i in range(len(self.switches))]
-        newGenome.best_local_fitness = newGenome.fitness
-        return newGenome
+            path = copy.deepcopy(self.Decode(code))
+        newSolution.code = copy.deepcopy(code)
+        newSolution.path = copy.deepcopy(path)
+        newSolution.velocity = [ i*0.1 for i in newSolution.code]
+        newSolution.fitness = self.Evaluate(newSolution.path)
+        newSolution.best_local_code= [0 for i in range(len(self.switches))]
+        newSolution.best_local_fitness = newSolution.fitness
+        return newSolution
     
     def Decode(self,code):
-        chromosomes = []
-        chromosomes.append(self.src)
+        path = []
+        path.append(self.src)
         current_switch = self.src
         while(current_switch!=self.dst):
-            neighbor_switches = set(self.adjacency[current_switch].keys())-set(chromosomes)
+            neighbor_switches = set(self.adjacency[current_switch].keys())-set(path)
             neighbor_switches = list(neighbor_switches)
             if(len(neighbor_switches)==0):
-                chromosomes.clear()
+                path.clear()
                 break
             switch_min = 1
             min = float('inf')
@@ -80,21 +80,21 @@ class PSO:
                     min = code[switch-1]*self.weight_map[current_switch][switch]
                     switch_min = switch
             current_switch = switch_min
-            chromosomes.append(current_switch)
-        return chromosomes
+            path.append(current_switch)
+        return path
 
-    def Evaluate(self,chromosomes):
+    def Evaluate(self,path):
         calculatedFitness = 0
-        for i in range(len(chromosomes) - 1):
-            p1 = chromosomes[i]
-            p2 = chromosomes[i + 1]
+        for i in range(len(path) - 1):
+            p1 = path[i]
+            p2 = path[i + 1]
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
 
-    def Find_best(self):
+    def FindBest(self):
         self.population.sort(key=lambda x: x.fitness)
-        if(self.population[0].fitness<=self.best_global_genome.fitness):
-            self.best_global_genome = copy.deepcopy(self.population[0])
+        if(self.population[0].fitness<=self.best_global_solution.fitness):
+            self.best_global_solution = copy.deepcopy(self.population[0])
         for i in range(self.N):
             if(self.population[i].fitness<=self.population[i].best_local_fitness):
                 self.population[i].best_local_code = copy.deepcopy(self.population[i].code)
@@ -104,74 +104,67 @@ class PSO:
         for i in range(self.N):
             velocity = copy.deepcopy(self.population[i].velocity)
             code = copy.deepcopy(self.population[i].code)
-            chromosomes = []
-            while(len(chromosomes)==0):
+            path = []
+            while(len(path)==0):
                 for j in range(len(self.switches)):
                     r1 = np.random.rand()
                     r2 = np.random.rand()
-                    velocity[j] = self.w*self.population[i].velocity[j] + self.c1*r1*(self.population[i].best_local_code[j]-self.population[i].code[j])+self.c2*r2*(self.best_global_genome.code[j]-self.population[i].code[j])
+                    velocity[j] = self.w*self.population[i].velocity[j] + self.c1*r1*(self.population[i].best_local_code[j]-self.population[i].code[j])+self.c2*r2*(self.best_global_solution.code[j]-self.population[i].code[j])
                 for j in range(len(self.switches)):
                     code[j] = self.population[i].code[j] + velocity[j]
                 mn = min(code)
                 mx = max(code)
                 for ii in range(len(self.switches)):
                     code[ii] = -1+2*(code[ii]-mn)/(mx-mn)
-                chromosomes = copy.deepcopy(self.Decode(code))
+                path = copy.deepcopy(self.Decode(code))
             self.population[i].velocity = copy.deepcopy(velocity)
             self.population[i].code = copy.deepcopy(code)
-            self.population[i].chromosomes = copy.deepcopy(chromosomes)
-            self.population[i].fitness = self.Evaluate(self.population[i].chromosomes)
+            self.population[i].path = copy.deepcopy(path)
+            self.population[i].fitness = self.Evaluate(self.population[i].path)
 
-    def Memorize_best(self):
+    def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
-        self.bests.append(copy.deepcopy(self.population[0]))
+        self.condidates.append(copy.deepcopy(self.population[0]))
         k=1
         for i in range(1,len(self.population)):
             dk_3 = False
-            for genome in self.bests:
-                if(tuple(genome.chromosomes)==tuple(self.population[i].chromosomes)):
+            for genome in self.condidates:
+                if(tuple(genome.path)==tuple(self.population[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.bests.append(copy.deepcopy(self.population[i]))
+                self.condidates.append(copy.deepcopy(self.population[i]))
                 k=k+1
-            if(k==self.MAX_PATHS):
+            if(k==self.K_paths):
                 break
     
-    def Do(self):
-        for i in range(self.generation):
-            self.Find_best()
-            self.Update()
-            self.Memorize_best()
-        self.bests.sort(key=lambda x: x.fitness)
-        self.best.append(copy.deepcopy(self.bests[0]))
+    def GetBest(self):
+        self.condidates.sort(key=lambda x: x.fitness)
+        self.best.append(copy.deepcopy(self.condidates[0]))
         k=1
-        for i in range(1,len(self.bests)):
+        for i in range(1,len(self.condidates)):
             dk_3 = False
-            for genome in self.best:
-                if(tuple(genome.chromosomes)==tuple(self.bests[i].chromosomes)):
+            for solution in self.best:
+                if(tuple(solution.path)==tuple(self.condidates[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.best.append(copy.deepcopy(self.bests[i]))
+                self.best.append(copy.deepcopy(self.condidates[i]))
                 k=k+1
-            if(k==self.MAX_PATHS):
+            if(k==self.K_paths):
                 break
         f1=open("wires.txt","w")
         f1.truncate(0)
-        for i in range(self.MAX_PATHS):
-            stt = ",".join(str(self.weight_map[self.best[i].chromosomes[x]][self.best[i].chromosomes[x+1]]) for x in range(len(self.best[i].chromosomes) - 1))
+        for i in range(self.K_paths):
+            stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
-# switches=[1,2,3,4,5]
-# adjacency={
-# 	1:{2:0,3:0,4:0},
-# 	2:{1:0,4:0,5:0},
-# 	3:{1:0,4:0,5:0},
-# 	4:{1:0,2:0,3:0,5:0},
-# 	5:{2:0,3:0,4:0}
-# }
-# alg = ABC(adjacency,switches,1,5,50,10,2)
-# alg.Do()
-# print(alg.best)
+
+
+    def Do(self):
+        for i in range(self.iterations):
+            self.FindBest()
+            self.Update()
+            self.MemorizeCondidates()
+        self.GetBest()

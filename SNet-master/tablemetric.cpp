@@ -86,12 +86,12 @@ TableMetric::TableMetric(QWidget *parent) :
             MnVL.append(mn);
         }
         double jj = (1-Ds[0]/Ds[Ds.count()-1])*100;
-        J = int( jj * 10.0 ) / 10.0;
+        J = int( jj * 100.0 ) / 100.0;
     ui->setupUi(this);
-    ui->tableWidget->setRowCount(4);
+    ui->tableWidget->setRowCount(Ds.count());
     ui->tableWidget->setColumnCount(7);
     ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
-    ui->tableWidget->setSpan(0, 6, 6, 1);
+    ui->tableWidget->setSpan(0, 6, Ds.count(), 1);
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(Ds[j]));

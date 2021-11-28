@@ -77,7 +77,7 @@ class ProjectController(app_manager.RyuApp):
                 self.paths[i].reverse()
         f=open("demo.txt","w")
         f.truncate(0)
-        print("Result of ACO:")
+        print("Result of GA:")
         for i in range(MAX_PATHS):
             stt = ",".join(str(x) for x in self.paths[i])
             stt= stt+","+str(self.pw[i])+"\n"

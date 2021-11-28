@@ -72,9 +72,9 @@ class ProjectController(app_manager.RyuApp):
         if(len(self.paths)==0):
             alg = ACO(self.adjacency,self.switches,src,dst,50,10,MAX_PATHS,0.2,0.6,0.4,0.3,10)
             alg.Do()
-            for gen in alg.best:
-                self.paths.append(gen.path)
-                self.pw.append(gen.fitness)
+            for solution in alg.best:
+                self.paths.append(solution.path)
+                self.pw.append(solution.fitness)
         if(self.paths[0][0]!=src):
             for i in range(MAX_PATHS):
                 self.paths[i].reverse()

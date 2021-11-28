@@ -69,15 +69,15 @@ class ProjectController(app_manager.RyuApp):
         if(len(self.paths)==0):
             alg = PSO(self.adjacency,self.switches,src,dst,50,10,MAX_PATHS,0.9,2,2)
             alg.Do()
-            for gen in alg.best:
-                self.paths.append(gen.chromosomes)
-                self.pw.append(gen.fitness)
+            for solution in alg.best:
+                self.paths.append(solution.path)
+                self.pw.append(solution.fitness)
         if(self.paths[0][0]!=src):
             for i in range(MAX_PATHS):
                 self.paths[i].reverse()
         f=open("demo.txt","w")
         f.truncate(0)
-        print("Result of ACO:")
+        print("Result of PSO:")
         for i in range(MAX_PATHS):
             stt = ",".join(str(x) for x in self.paths[i])
             stt= stt+","+str(self.pw[i])+"\n"

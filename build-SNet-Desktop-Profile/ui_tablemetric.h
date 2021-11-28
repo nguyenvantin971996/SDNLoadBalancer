@@ -30,7 +30,7 @@ public:
     {
         if (TableMetric->objectName().isEmpty())
             TableMetric->setObjectName(QString::fromUtf8("TableMetric"));
-        TableMetric->resize(738, 274);
+        TableMetric->resize(763, 524);
         gridLayout = new QGridLayout(TableMetric);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         tableWidget = new QTableWidget(TableMetric);
