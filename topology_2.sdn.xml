@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE topology>
+<Network>
+ <Hosts>
+  <Host mac="00:00:00:00:00:01" ip="10.0.0.1" x="104" y="567"/>
+  <Host mac="00:00:00:00:00:02" ip="10.0.0.2" x="1132" y="550"/>
+ </Hosts>
+ <Switches>
+  <Switch x="192" y="424"/>
+  <Switch x="443" y="419"/>
+  <Switch x="741" y="424"/>
+  <Switch x="964" y="403"/>
+  <Switch x="273" y="232"/>
+  <Switch x="596" y="237"/>
+  <Switch x="886" y="233"/>
+  <Switch x="276" y="624"/>
+  <Switch x="644" y="639"/>
+  <Switch x="928" y="636"/>
+ </Switches>
+ <Controllers>
+  <Controller ip="127.0.0.1" port="6653" x="525" y="54"/>
+ </Controllers>
+ <SSLinks>
+  <Link delay="1" node2="h1" node1="s1" bandwidth="100" loss="0"/>
+  <Link delay="50" node2="s1" node1="s2" bandwidth="100" loss="0"/>
+  <Link delay="70" node2="s2" node1="s3" bandwidth="100" loss="0"/>
+  <Link delay="60" node2="s3" node1="s4" bandwidth="100" loss="0"/>
+  <Link delay="60" node2="s1" node1="s8" bandwidth="100" loss="0"/>
+  <Link delay="20" node2="s8" node1="s9" bandwidth="100" loss="0"/>
+  <Link delay="40" node2="s9" node1="s10" bandwidth="100" loss="0"/>
+  <Link delay="80" node2="s10" node1="s4" bandwidth="100" loss="0"/>
+  <Link delay="50" node2="s2" node1="s8" bandwidth="100" loss="0"/>
+  <Link delay="70" node2="s2" node1="s9" bandwidth="100" loss="0"/>
+  <Link delay="90" node2="s3" node1="s9" bandwidth="100" loss="0"/>
+  <Link delay="20" node2="s3" node1="s10" bandwidth="100" loss="0"/>
+  <Link delay="50" node2="s3" node1="s7" bandwidth="100" loss="0"/>
+  <Link delay="50" node2="s7" node1="s4" bandwidth="100" loss="0"/>
+  <Link delay="20" node2="s7" node1="s6" bandwidth="100" loss="0"/>
+  <Link delay="70" node2="s6" node1="s2" bandwidth="100" loss="0"/>
+  <Link delay="90" node2="s3" node1="s6" bandwidth="100" loss="0"/>
+  <Link delay="40" node2="s5" node1="s1" bandwidth="100" loss="0"/>
+  <Link delay="30" node2="s5" node1="s2" bandwidth="100" loss="0"/>
+  <Link delay="50" node2="s5" node1="s6" bandwidth="100" loss="0"/>
+  <Link delay="1" node2="s4" node1="h2" bandwidth="100" loss="0"/>
+ </SSLinks>
+ <CSLinks>
+  <Link node2="s1" node1="c0"/>
+  <Link node2="s2" node1="c0"/>
+  <Link node2="s3" node1="c0"/>
+  <Link node2="s4" node1="c0"/>
+  <Link node2="s5" node1="c0"/>
+  <Link node2="s6" node1="c0"/>
+  <Link node2="s7" node1="c0"/>
+  <Link node2="s8" node1="c0"/>
+  <Link node2="s9" node1="c0"/>
+  <Link node2="s10" node1="c0"/>
+ </CSLinks>
+ <Texts/>
+</Network>

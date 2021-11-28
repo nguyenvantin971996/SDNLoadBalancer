@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>host.png</file>
+        <file>switch.png</file>
+        <file>link.png</file>
+        <file>edit.png</file>
+        <file>open.png</file>
+        <file>python.png</file>
+        <file>save.png</file>
+        <file>save_as.png</file>
+        <file>controller.png</file>
+        <file>text.png</file>
+        <file>new.png</file>
+        <file>fullConnection.png</file>
+    </qresource>
+</RCC>
