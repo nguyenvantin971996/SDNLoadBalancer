@@ -65,6 +65,8 @@ private slots:
 
     void on_actionShow_results_triggered();
 
+    void on_actionShow_chart_triggered();
+
 signals:
     void signalConnectSdnController();
     void signalClearNetworkMap();

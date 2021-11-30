@@ -58,6 +58,7 @@ public:
     QAction *actionRandomMetric;
     QAction *actionNN_GA_8_8_8;
     QAction *actionShow_results;
+    QAction *actionShow_chart;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QScrollArea *scrollArea;
@@ -168,6 +169,8 @@ public:
         actionNN_GA_8_8_8->setObjectName(QString::fromUtf8("actionNN_GA_8_8_8"));
         actionShow_results = new QAction(MainWindow);
         actionShow_results->setObjectName(QString::fromUtf8("actionShow_results"));
+        actionShow_chart = new QAction(MainWindow);
+        actionShow_chart->setObjectName(QString::fromUtf8("actionShow_chart"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -246,6 +249,7 @@ public:
         menuOptions->addAction(menuShow_metric->menuAction());
         menuOptions->addAction(actionRandomMetric);
         menuOptions->addAction(actionShow_results);
+        menuOptions->addAction(actionShow_chart);
         menuShow_metric->addAction(actionDisplayDelay);
         menuShow_metric->addAction(actionDisplayBandwidth);
         menuShow_metric->addAction(actionDisplayPacketLoss);
@@ -352,6 +356,7 @@ public:
         actionRandomMetric->setText(QApplication::translate("MainWindow", "RandomMetric", nullptr));
         actionNN_GA_8_8_8->setText(QApplication::translate("MainWindow", "NN+GA+8-8-8", nullptr));
         actionShow_results->setText(QApplication::translate("MainWindow", "Show results", nullptr));
+        actionShow_chart->setText(QApplication::translate("MainWindow", "Show chart", nullptr));
         networkMapView->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", nullptr));
         menuConverter->setTitle(QApplication::translate("MainWindow", "Export", nullptr));

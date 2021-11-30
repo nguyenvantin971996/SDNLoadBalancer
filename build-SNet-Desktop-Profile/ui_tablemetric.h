@@ -13,37 +13,69 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QTableWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_TableMetric
 {
 public:
-    QGridLayout *gridLayout;
     QTableWidget *tableWidget;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout_2;
+    QHBoxLayout *horizontalLayout;
+    QLabel *label;
+    QSlider *horizontalSlider;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *TableMetric)
     {
         if (TableMetric->objectName().isEmpty())
             TableMetric->setObjectName(QString::fromUtf8("TableMetric"));
-        TableMetric->resize(763, 524);
-        gridLayout = new QGridLayout(TableMetric);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        TableMetric->resize(871, 524);
         tableWidget = new QTableWidget(TableMetric);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
+        tableWidget->setGeometry(QRect(10, 10, 851, 461));
+        widget = new QWidget(TableMetric);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(11, 481, 851, 31));
+        horizontalLayout_2 = new QHBoxLayout(widget);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        label = new QLabel(widget);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setAlignment(Qt::AlignCenter);
 
-        gridLayout->addWidget(tableWidget, 0, 0, 1, 1);
+        horizontalLayout->addWidget(label);
 
-        buttonBox = new QDialogButtonBox(TableMetric);
+        horizontalSlider = new QSlider(widget);
+        horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
+        horizontalSlider->setContextMenuPolicy(Qt::DefaultContextMenu);
+        horizontalSlider->setMaximum(30);
+        horizontalSlider->setValue(30);
+        horizontalSlider->setOrientation(Qt::Horizontal);
+        horizontalSlider->setInvertedAppearance(false);
+        horizontalSlider->setInvertedControls(false);
+        horizontalSlider->setTickPosition(QSlider::TicksBothSides);
+
+        horizontalLayout->addWidget(horizontalSlider);
+
+
+        horizontalLayout_2->addLayout(horizontalLayout);
+
+        buttonBox = new QDialogButtonBox(widget);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
 
-        gridLayout->addWidget(buttonBox, 1, 0, 1, 1);
+        horizontalLayout_2->addWidget(buttonBox);
 
 
         retranslateUi(TableMetric);
@@ -56,6 +88,7 @@ public:
     void retranslateUi(QDialog *TableMetric)
     {
         TableMetric->setWindowTitle(QApplication::translate("TableMetric", "Result of evolutionary algorithm", nullptr));
+        label->setText(QApplication::translate("TableMetric", "Jitter (%)", nullptr));
     } // retranslateUi
 
 };

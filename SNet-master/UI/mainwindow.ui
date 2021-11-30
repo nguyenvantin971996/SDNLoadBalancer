@@ -160,6 +160,7 @@
     <addaction name="menuShow_metric"/>
     <addaction name="actionRandomMetric"/>
     <addaction name="actionShow_results"/>
+    <addaction name="actionShow_chart"/>
    </widget>
    <widget class="QMenu" name="menuInstruments">
     <property name="title">
@@ -443,6 +444,11 @@
   <action name="actionShow_results">
    <property name="text">
     <string>Show results</string>
+   </property>
+  </action>
+  <action name="actionShow_chart">
+   <property name="text">
+    <string>Show chart</string>
    </property>
   </action>
  </widget>

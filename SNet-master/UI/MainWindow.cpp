@@ -4,6 +4,16 @@
 #include <QFileDialog>
 #include <QTime>
 #include "tablemetric.h"
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMainWindow>
+#include <QtCharts/QChartView>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QLegend>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QValueAxis>
+
+QT_CHARTS_USE_NAMESPACE
 MainWindow::MainWindow(QWidget * parent) :
     QMainWindow(parent), ui(new Ui::MainWindow), openedFilePath(QString())
 {
@@ -399,4 +409,81 @@ void MainWindow::on_actionShow_results_triggered()
 {
     tablemetric = new TableMetric(this);
     tablemetric->show();
+}
+
+void MainWindow::on_actionShow_chart_triggered()
+{
+    QList<double> Ds;
+    QList<QList<double>> paths;
+    QString filename="../wires.txt";
+        QFile file(filename);
+        if(!file.open(QIODevice::ReadOnly)) {
+            QMessageBox::information(0, "error", file.errorString());
+        }
+        QTextStream in(&file);
+        int i=1;
+        while(!in.atEnd()){
+            double s = 0;
+            QString line = in.readLine();
+            QString ii = QString::number(i);
+            QStringList linelist;
+            QList<double> path;
+            linelist = line.split(",");
+            for(int x=linelist.count()-1;x>=0;x--)
+            {
+                double r = linelist.at(x).toDouble();
+                s+=r;
+                path.append(r);
+            }
+            Ds.append(s);
+            paths.append(path);
+            i++;
+        }
+
+        QBarSet *set0 = new QBarSet("Load");
+        for(int i=0;i<Ds.count();i++)
+        {
+            set0->append(Ds[i]);
+        }
+        QBarSeries *series = new QBarSeries();
+        series->append(set0);
+
+        QChart *chart = new QChart();
+        chart->addSeries(series);
+        chart->setTitle("Load of paths");
+        chart->setAnimationOptions(QChart::SeriesAnimations);
+        QLinearGradient plotAreaGradient;
+        plotAreaGradient.setStart(QPointF(0, 1));
+        plotAreaGradient.setFinalStop(QPointF(1, 0));
+        plotAreaGradient.setColorAt(0.0, QRgb(0x555555));
+        plotAreaGradient.setColorAt(1.0, QRgb(0x55aa55));
+        plotAreaGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+        chart->setPlotAreaBackgroundBrush(plotAreaGradient);
+        chart->setPlotAreaBackgroundVisible(true);
+
+        QStringList categories;
+        for(int i=0;i<Ds.count();i++)
+        {
+            QString valueAsString = QString::number(i+1);
+            categories.append("Path "+valueAsString);
+        }
+        QBarCategoryAxis *axisX = new QBarCategoryAxis();
+        axisX->append(categories);
+        chart->addAxis(axisX, Qt::AlignBottom);
+        series->attachAxis(axisX);
+
+        QValueAxis *axisY = new QValueAxis();
+        axisY->setRange(0,300);
+        chart->addAxis(axisY, Qt::AlignLeft);
+        series->attachAxis(axisY);
+
+        chart->legend()->setVisible(true);
+        chart->legend()->setAlignment(Qt::AlignBottom);
+
+        QChartView *chartView = new QChartView(chart);
+        chartView->setRenderHint(QPainter::Antialiasing);
+        QMainWindow *window = new QMainWindow(this);
+        window->setCentralWidget(chartView);
+        window->resize(100*Ds.count(), 600);
+        window->show();
 }
