@@ -10,6 +10,7 @@ TableMetric::TableMetric(QWidget *parent) :
     ui(new Ui::TableMetric)
 {
     ui->setupUi(this);
+    int K_paths;
     QList<double> Ds;
     QList<double> I;
     QList<double> AV;
@@ -91,55 +92,61 @@ TableMetric::TableMetric(QWidget *parent) :
         }
         double jj = (1-Ds[0]/Ds[Ds.count()-1])*100;
         J = int( jj * 100.0 ) / 100.0;
-
+        K_paths = Ds.count();
     ui->tableWidget->setRowCount(Ds.count());
-    ui->tableWidget->setColumnCount(8);
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
+    ui->tableWidget->setColumnCount(9);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "K_paths" << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
     ui->tableWidget->setSpan(0, 0, Ds.count(), 1);
-    ui->tableWidget->setSpan(0, 7, Ds.count(), 1);
+    ui->tableWidget->setSpan(0, 1, Ds.count(), 1);
+    ui->tableWidget->setSpan(0, 8, Ds.count(), 1);
+
+    QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(K_paths));
+    item2->setTextAlignment( Qt::AlignCenter );
+    ui->tableWidget->setItem(0,0,item2);
 
     QTableWidgetItem *itemm = new QTableWidgetItem(tr("%1").arg(CD));
     itemm->setTextAlignment( Qt::AlignCenter );
-    ui->tableWidget->setItem(0,0,itemm);
+    ui->tableWidget->setItem(0,1,itemm);
+
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(Ds[j]));
-        itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,1,itm);
-    }
-    for(int j=0;j<ui->tableWidget->rowCount();j++)
-    {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(I[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,2,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(AV[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(I[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,3,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(SD[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(AV[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,4,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MxVL[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(SD[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,5,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MnVL[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MxVL[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,6,itm);
     }
+    for(int j=0;j<ui->tableWidget->rowCount();j++)
+    {
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MnVL[j]));
+        itm->setTextAlignment( Qt::AlignCenter );
+        ui->tableWidget->setItem(j,7,itm);
+    }
     QTableWidgetItem *item = new QTableWidgetItem(tr("%1").arg(J));
     item->setTextAlignment( Qt::AlignCenter );
-    ui->tableWidget->setItem(0,7,item);
+    ui->tableWidget->setItem(0,8,item);
 }
 
 TableMetric::~TableMetric()
@@ -149,6 +156,7 @@ TableMetric::~TableMetric()
 
 void TableMetric::on_horizontalSlider_valueChanged(int value)
 {
+    int K_paths;
     QList<double> Ds;
     QList<double> I;
     QList<double> AV;
@@ -237,55 +245,60 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
         }
         double jj = (1-Ds[0]/Ds[Ds.count()-1])*100;
         J = int( jj * 100.0 ) / 100.0;
-
+        K_paths = Ds.count();
     ui->tableWidget->setRowCount(Ds.count());
-    ui->tableWidget->setColumnCount(8);
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
+    ui->tableWidget->setColumnCount(9);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "K_paths" << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
     ui->tableWidget->setSpan(0, 0, Ds.count(), 1);
-    ui->tableWidget->setSpan(0, 7, Ds.count(), 1);
+    ui->tableWidget->setSpan(0, 1, Ds.count(), 1);
+    ui->tableWidget->setSpan(0, 8, Ds.count(), 1);
+
+    QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(K_paths));
+    item2->setTextAlignment( Qt::AlignCenter );
+    ui->tableWidget->setItem(0,0,item2);
 
     QTableWidgetItem *itemm = new QTableWidgetItem(tr("%1").arg(CD));
     itemm->setTextAlignment( Qt::AlignCenter );
-    ui->tableWidget->setItem(0,0,itemm);
+    ui->tableWidget->setItem(0,1,itemm);
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(Ds[j]));
-        itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,1,itm);
-    }
-    for(int j=0;j<ui->tableWidget->rowCount();j++)
-    {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(I[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,2,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(AV[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(I[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,3,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(SD[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(AV[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,4,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MxVL[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(SD[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,5,itm);
     }
     for(int j=0;j<ui->tableWidget->rowCount();j++)
     {
-        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MnVL[j]));
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MxVL[j]));
         itm->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(j,6,itm);
     }
+    for(int j=0;j<ui->tableWidget->rowCount();j++)
+    {
+        QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MnVL[j]));
+        itm->setTextAlignment( Qt::AlignCenter );
+        ui->tableWidget->setItem(j,7,itm);
+    }
     QTableWidgetItem *item = new QTableWidgetItem(tr("%1").arg(J));
     item->setTextAlignment( Qt::AlignCenter );
-    ui->tableWidget->setItem(0,7,item);
+    ui->tableWidget->setItem(0,8,item);
     // install signal handlers
       QObject::connect(ui->horizontalSlider, &QSlider::sliderMoved,
         [&](int value) {
@@ -295,4 +308,7 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
           QToolTip::showText(QCursor::pos(), QString("%1").arg(value), nullptr);
     #endif // 0
         });
+      QString s = QString::number(value);
+      ui->textEdit->setText(s);
+      ui->textEdit->setAlignment(Qt::AlignCenter);
 }
