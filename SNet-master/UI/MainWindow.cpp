@@ -473,7 +473,7 @@ void MainWindow::on_actionShow_chart_triggered()
         series->attachAxis(axisX);
 
         QValueAxis *axisY = new QValueAxis();
-        axisY->setRange(0,300);
+        axisY->setRange(0,Ds[Ds.count()-1]+50);
         chart->addAxis(axisY, Qt::AlignLeft);
         series->attachAxis(axisY);
 
