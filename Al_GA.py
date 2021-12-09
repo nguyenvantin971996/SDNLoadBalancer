@@ -5,7 +5,7 @@ import copy
 
 class Genome(object):
     def __init__(self):
-        self.chromosomes = []
+        self.path = []
         self.fitness = float('inf')
 
 class GA:
@@ -41,29 +41,58 @@ class GA:
 
     def CreateGenome(self):
         newGenome = Genome()
-        newGenome.chromosomes.append(self.src)
+        newGenome.path.append(self.src)
         current_switch = self.src
         while(current_switch!=self.dst):
-            neighbor_switches = set(self.adjacency[current_switch].keys())-set(newGenome.chromosomes)
+            neighbor_switches = set(self.adjacency[current_switch].keys())-set(newGenome.path)
             neighbor_switches = list(neighbor_switches)
             if(len(neighbor_switches)==0):
-                newGenome.chromosomes.clear()
+                newGenome.path.clear()
                 current_switch = self.src
-                newGenome.chromosomes.append(self.src)
+                newGenome.path.append(self.src)
             else:
                 next_switch = random.choice(neighbor_switches)
-                newGenome.chromosomes.append(next_switch)
+                newGenome.path.append(next_switch)
                 current_switch = next_switch
-        newGenome.fitness = self.Evaluate(newGenome.chromosomes)
+        newGenome.fitness = self.Evaluate(newGenome.path)
         return newGenome
 
-    def Evaluate(self,chromosomes):
+    def Evaluate(self,path):
         calculatedFitness = 0
-        for i in range(len(chromosomes) - 1):
-            p1 = chromosomes[i]
-            p2 = chromosomes[i + 1]
+        for i in range(len(path) - 1):
+            p1 = path[i]
+            p2 = path[i + 1]
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
+    
+    def CorrectGenome(self,genome):
+        dk = False
+        for i in range(1,len(genome.path)-2):
+            for j in range(i+1,len(genome.path)-1):
+                if(genome.path[i]==genome.path[j]):
+                    del genome.path[i+1:j+1]
+                    dk = True
+                    break
+            if(dk==True):
+                break
+        return genome
+    
+    def ExchangeGenes(self, parents_1, parents_2):
+        dk = False
+        for i in range(1,len(parents_1.path)-1):
+            for j in range(1,len(parents_2.path)-1):
+                if(parents_1.path[i]==parents_2.path[j]):
+                    tail_1 = copy.deepcopy(parents_1.path[i+1:])
+                    tail_2 = copy.deepcopy(parents_2.path[j+1:])
+                    del parents_1.path[i+1:]
+                    del parents_2.path[j+1:]
+                    parents_1.path.extend(tail_2)
+                    parents_2.path.extend(tail_1)
+                    dk = True
+                    break
+            if(dk==True):
+                break
+        return parents_1, parents_2
     
     def Crossover(self):
         for i in range(self.N):
@@ -72,40 +101,11 @@ class GA:
                 mother = random.randint(0,self.N-1)
                 parents_1 = copy.deepcopy(self.population[father])
                 parents_2 = copy.deepcopy(self.population[mother])
-                dk = False
-                for i in range(1,len(parents_1.chromosomes)-1):
-                    for j in range(1,len(parents_2.chromosomes)-1):
-                        if(parents_1.chromosomes[i]==parents_2.chromosomes[j]):
-                            tail_1 = copy.deepcopy(parents_1.chromosomes[i+1:])
-                            tail_2 = copy.deepcopy(parents_2.chromosomes[j+1:])
-                            del parents_1.chromosomes[i+1:]
-                            del parents_2.chromosomes[j+1:]
-                            parents_1.chromosomes.extend(tail_2)
-                            parents_2.chromosomes.extend(tail_1)
-                            dk = True
-                            break
-                    if(dk==True):
-                        break
-                dk_1 = False
-                for i in range(1,len(parents_1.chromosomes)-2):
-                    for j in range(i+1,len(parents_1.chromosomes)-1):
-                        if(parents_1.chromosomes[i]==parents_1.chromosomes[j]):
-                            del parents_1.chromosomes[i+1:j+1]
-                            dk_1 = True
-                            break
-                    if(dk_1==True):
-                        break
-                dk_2 = False
-                for i in range(1,len(parents_2.chromosomes)-2):
-                    for j in range(i+1,len(parents_2.chromosomes)-1):
-                        if(parents_2.chromosomes[i]==parents_2.chromosomes[j]):
-                            del parents_2.chromosomes[i+1:j+1]
-                            dk_2 = True
-                            break
-                    if(dk_2==True):
-                        break
-                parents_1.fitness = self.Evaluate(parents_1.chromosomes)
-                parents_2.fitness = self.Evaluate(parents_2.chromosomes)
+                parents_1, parents_2 = self.ExchangeGenes(parents_1, parents_2)
+                parents_1 = self.CorrectGenome(parents_1)
+                parents_2 = self.CorrectGenome(parents_2)
+                parents_1.fitness = self.Evaluate(parents_1.path)
+                parents_2.fitness = self.Evaluate(parents_2.path)
                 self.population.append(copy.deepcopy(parents_1))
                 self.population.append(copy.deepcopy(parents_2))
     
@@ -114,17 +114,17 @@ class GA:
             if random.uniform(0,1) < self.Pm:
                 origin = random.randint(0,self.N-1)
                 parents = copy.deepcopy(self.population[origin]) 
-                ls = list(range(1,len(parents.chromosomes)-1))
+                ls = list(range(1,len(parents.path)-1))
                 point_mutation = random.choice(ls)
-                current_switch = parents.chromosomes[point_mutation]
-                del parents.chromosomes[point_mutation+1:]
+                current_switch = parents.path[point_mutation]
+                del parents.path[point_mutation+1:]
                 while(current_switch!=self.dst):
                     neighbor_switches = set(self.adjacency[current_switch].keys())
                     neighbor_switches = list(neighbor_switches)
                     next_switch = random.choice(neighbor_switches)
-                    parents.chromosomes.append(next_switch)
+                    parents.path.append(next_switch)
                     current_switch = next_switch
-                parents.fitness = self.Evaluate(parents.chromosomes)
+                parents.fitness = self.Evaluate(parents.path)
                 self.population.append(copy.deepcopy(parents))
                 
     def Selection(self):
@@ -145,7 +145,7 @@ class GA:
         for i in range(1,len(self.population)):
             dk_3 = False
             for genome in self.condidates:
-                if(tuple(genome.chromosomes)==tuple(self.population[i].chromosomes)):
+                if(tuple(genome.path)==tuple(self.population[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
@@ -161,7 +161,7 @@ class GA:
         for i in range(1,len(self.condidates)):
             dk_3 = False
             for genome in self.best:
-                if(tuple(genome.chromosomes)==tuple(self.condidates[i].chromosomes)):
+                if(tuple(genome.path)==tuple(self.condidates[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
@@ -172,7 +172,7 @@ class GA:
         f1=open("wires.txt","w")
         f1.truncate(0)
         for i in range(self.K_paths):
-            stt = ",".join(str(self.weight_map[self.best[i].chromosomes[x]][self.best[i].chromosomes[x+1]]) for x in range(len(self.best[i].chromosomes) - 1))
+            stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
             stt= stt+"\n"
             f1.write(stt)
         f1.close()

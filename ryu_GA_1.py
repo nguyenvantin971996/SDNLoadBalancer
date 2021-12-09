@@ -23,7 +23,10 @@ import random
 import time
 
 from Al_GA import GA
-
+N = 100
+iterations = 10
+Pc = 0.7
+Pm = 0.1
 MAX_PATHS = 4
 
 class ProjectController(app_manager.RyuApp):
@@ -67,10 +70,10 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = GA(self.adjacency,self.switches,src,dst,50,10,0.7,0.1,MAX_PATHS)
+            alg = GA(self.adjacency,self.switches,src,dst,N, iterations, Pc, Pm, MAX_PATHS)
             alg.Do()
             for gen in alg.best:
-                self.paths.append(gen.chromosomes)
+                self.paths.append(gen.path)
                 self.pw.append(gen.fitness)
         if(self.paths[0][0]!=src):
             for i in range(MAX_PATHS):

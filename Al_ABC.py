@@ -83,6 +83,14 @@ class ABC:
             p2 = path[i + 1]
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
+    
+    def Normalize(self,code):
+        code_2 = copy.deepcopy(code)
+        mn = min(code_2)
+        mx = max(code_2)
+        for j in range(len(self.switches)):
+            code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
+        return code
 
     def InitializationPhase(self):
         for i in range(self.N):
@@ -116,11 +124,7 @@ class ABC:
                         code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
                     else:
                         code[ii] = solution.code[ii]
-                code_2 = copy.deepcopy(code)
-                mn = min(code_2)
-                mx = max(code_2)
-                for j in range(len(self.switches)):
-                    code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             solution.code = copy.deepcopy(code)
             solution.path = copy.deepcopy(path)
@@ -159,11 +163,7 @@ class ABC:
                         code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
                     else:
                         code[ii] = solution.code[ii]
-                code_2 = copy.deepcopy(code)
-                mn = min(code_2)
-                mx = max(code_2)
-                for j in range(len(self.switches)):
-                    code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             solution.code = copy.deepcopy(code)
             solution.path = copy.deepcopy(path)

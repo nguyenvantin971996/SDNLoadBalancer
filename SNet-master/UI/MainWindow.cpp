@@ -452,14 +452,6 @@ void MainWindow::on_actionShow_chart_triggered()
         chart->addSeries(series);
         chart->setTitle("Load of paths");
         chart->setAnimationOptions(QChart::SeriesAnimations);
-        QLinearGradient plotAreaGradient;
-        plotAreaGradient.setStart(QPointF(0, 1));
-        plotAreaGradient.setFinalStop(QPointF(1, 0));
-        plotAreaGradient.setColorAt(0.0, QRgb(0x555555));
-        plotAreaGradient.setColorAt(1.0, QRgb(0x55aa55));
-        plotAreaGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-        chart->setPlotAreaBackgroundBrush(plotAreaGradient);
-        chart->setPlotAreaBackgroundVisible(true);
 
         QStringList categories;
         for(int i=0;i<Ds.count();i++)

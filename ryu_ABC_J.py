@@ -23,6 +23,9 @@ import random
 import time
 from Al_ABC_J import ABC
 
+N = 100
+iterations = 10
+
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
@@ -64,7 +67,7 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = ABC(self.adjacency,self.switches,src,dst,50,10)
+            alg = ABC(self.adjacency,self.switches,src,dst,N,iterations)
             alg.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
