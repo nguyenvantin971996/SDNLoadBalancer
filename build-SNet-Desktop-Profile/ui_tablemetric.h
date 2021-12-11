@@ -34,10 +34,10 @@ public:
     {
         if (TableMetric->objectName().isEmpty())
             TableMetric->setObjectName(QString::fromUtf8("TableMetric"));
-        TableMetric->resize(1049, 620);
+        TableMetric->resize(690, 620);
         tableWidget = new QTableWidget(TableMetric);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        tableWidget->setGeometry(QRect(10, 10, 1031, 551));
+        tableWidget->setGeometry(QRect(10, 10, 671, 551));
         textEdit = new QTextEdit(TableMetric);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
         textEdit->setEnabled(true);
@@ -49,12 +49,12 @@ public:
         textEdit->setSizePolicy(sizePolicy);
         buttonBox = new QDialogButtonBox(TableMetric);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(870, 580, 171, 31));
+        buttonBox->setGeometry(QRect(490, 580, 171, 31));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         horizontalSlider = new QSlider(TableMetric);
         horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(190, 580, 461, 31));
+        horizontalSlider->setGeometry(QRect(190, 580, 281, 31));
         horizontalSlider->setContextMenuPolicy(Qt::DefaultContextMenu);
         horizontalSlider->setMaximum(30);
         horizontalSlider->setValue(30);

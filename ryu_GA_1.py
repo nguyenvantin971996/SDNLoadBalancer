@@ -23,7 +23,7 @@ import random
 import time
 
 from Al_GA import GA
-N = 100
+N = [20, 40, 80]
 iterations = 10
 Pc = 0.7
 Pm = 0.1
@@ -70,8 +70,12 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = GA(self.adjacency,self.switches,src,dst,N, iterations, Pc, Pm, MAX_PATHS)
+            alg = GA(self.adjacency,self.switches,src,dst,N[0], iterations, Pc, Pm, MAX_PATHS)
             alg.Do()
+            alg1 = GA(self.adjacency,self.switches,src,dst,N[1], iterations, Pc, Pm, MAX_PATHS)
+            alg1.Do()
+            alg2 = GA(self.adjacency,self.switches,src,dst,N[2], iterations, Pc, Pm, MAX_PATHS)
+            alg2.Do()
             for gen in alg.best:
                 self.paths.append(gen.path)
                 self.pw.append(gen.fitness)
