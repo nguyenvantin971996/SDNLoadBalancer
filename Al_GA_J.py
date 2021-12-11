@@ -15,7 +15,7 @@ class GA:
         self.switches = switches
         self.src= src
         self.dst = dst
-        self.weight_map= self.GetWeightMap()
+        self.weight_map = self.GetWeightMap()
         self.N = N
         self.iterations = iterations
         self.Pm = Pm
@@ -160,8 +160,20 @@ class GA:
             if(dk_3!=True):
                 if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
                     self.best.append(copy.deepcopy(self.condidates[i]))
-        f1=open("wires.txt","w")
-        f1.truncate(0)
+
+        file1 = open('wires.txt','r')
+        Lines = file1.readlines()
+        count = 0
+        for line in Lines:
+            if(line.strip()[0] == "N"):
+                count += 1
+        file1.close()
+
+        f1 = open("wires.txt","a")
+        if(count==3):
+            f1.truncate(0)
+        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.iterations), "Pc = "+str(self.Pc), "Pm = "+str(self.Pm)]) + "\n"
+        f1.write(stt_0)
         for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
             stt= stt+"\n"

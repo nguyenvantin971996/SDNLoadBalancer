@@ -34,14 +34,14 @@ public:
     {
         if (TableMetric->objectName().isEmpty())
             TableMetric->setObjectName(QString::fromUtf8("TableMetric"));
-        TableMetric->resize(986, 568);
+        TableMetric->resize(1049, 620);
         tableWidget = new QTableWidget(TableMetric);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        tableWidget->setGeometry(QRect(10, 10, 961, 461));
+        tableWidget->setGeometry(QRect(10, 10, 1031, 551));
         textEdit = new QTextEdit(TableMetric);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
         textEdit->setEnabled(true);
-        textEdit->setGeometry(QRect(140, 510, 41, 31));
+        textEdit->setGeometry(QRect(140, 580, 41, 31));
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -49,12 +49,12 @@ public:
         textEdit->setSizePolicy(sizePolicy);
         buttonBox = new QDialogButtonBox(TableMetric);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(690, 510, 171, 31));
+        buttonBox->setGeometry(QRect(870, 580, 171, 31));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         horizontalSlider = new QSlider(TableMetric);
         horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(200, 510, 461, 31));
+        horizontalSlider->setGeometry(QRect(190, 580, 461, 31));
         horizontalSlider->setContextMenuPolicy(Qt::DefaultContextMenu);
         horizontalSlider->setMaximum(30);
         horizontalSlider->setValue(30);
@@ -64,7 +64,7 @@ public:
         horizontalSlider->setTickPosition(QSlider::TicksBothSides);
         label = new QLabel(TableMetric);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(13, 510, 121, 31));
+        label->setGeometry(QRect(10, 580, 121, 31));
         sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
         label->setSizePolicy(sizePolicy);
         label->setAlignment(Qt::AlignCenter);

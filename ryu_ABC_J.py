@@ -23,7 +23,7 @@ import random
 import time
 from Al_ABC_J import ABC
 
-N = 100
+N = 200
 iterations = 10
 
 class ProjectController(app_manager.RyuApp):

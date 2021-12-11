@@ -274,7 +274,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "SDN LoadBalancer", nullptr));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "SDNLoadBalancer", nullptr));
         actionOpen->setText(QApplication::translate("MainWindow", "Open ...", nullptr));
 #ifndef QT_NO_SHORTCUT
         actionOpen->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", nullptr));

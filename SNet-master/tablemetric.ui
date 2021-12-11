@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>986</width>
-    <height>568</height>
+    <width>1049</width>
+    <height>620</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>961</width>
-     <height>461</height>
+     <width>1031</width>
+     <height>551</height>
     </rect>
    </property>
   </widget>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>510</y>
+     <y>580</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -52,8 +52,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>510</y>
+     <x>870</x>
+     <y>580</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -68,8 +68,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QSlider" name="horizontalSlider">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>510</y>
+     <x>190</x>
+     <y>580</y>
      <width>461</width>
      <height>31</height>
     </rect>
@@ -99,8 +99,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>13</x>
-     <y>510</y>
+     <x>10</x>
+     <y>580</y>
      <width>121</width>
      <height>31</height>
     </rect>
