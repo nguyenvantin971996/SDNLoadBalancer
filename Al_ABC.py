@@ -14,14 +14,14 @@ class Solution(object):
 
 class ABC:
 
-    def __init__(self,adjacency, switches, src, dst, N, iterations, K_paths):
+    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
         self.dst = dst
         self.weight_map= self.GetWeightMap()
         self.N = N
-        self.iterations = iterations
+        self.Max = Max
         self.K_paths = K_paths
         self.population = [self.CreateSolution() for i in range(self.N)]
         self.limit = int(N*len(switches)/2)
@@ -234,7 +234,7 @@ class ABC:
         f1 = open("wires.txt","a")
         if(count==3):
             f1.truncate(0)
-        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.iterations)]) + "\n"
+        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
         f1.write(stt_0)
         for i in range(self.K_paths):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
@@ -244,7 +244,7 @@ class ABC:
 
     def Do(self):
         self.InitializationPhase()
-        for i in range(self.iterations):
+        for i in range(self.Max):
             self.EmployeedPhase()
             self.OnlookedPhase()
             self.ScoutPhase()

@@ -12,14 +12,14 @@ class Ant(object):
 
 class ACO:
 
-    def __init__(self,adjacency, switches, src, dst, N, iterations, p, a, b, p0, Q):
+    def __init__(self,adjacency, switches, src, dst, N, Max, p, a, b, p0, Q):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
         self.dst = dst
         self.weight_map= self.GetWeightMap()
         self.N = N
-        self.iterations = iterations
+        self.Max = Max
         self.p = p
         self.a = a
         self.b = b
@@ -158,7 +158,7 @@ class ACO:
         f1 = open("wires.txt","a")
         if(count==3):
             f1.truncate(0)
-        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.iterations)]) + "\n"
+        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
         f1.write(stt_0)
         for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
@@ -167,7 +167,7 @@ class ACO:
         f1.close()
 
     def Do(self):
-        for i in range(self.iterations):
+        for i in range(self.Max):
             self.CreatePath()
             self.UpdatePheromone()
             self.MemorizeCondidates()

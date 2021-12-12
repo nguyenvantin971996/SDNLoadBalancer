@@ -22,10 +22,12 @@ import os
 import random
 import time
 
-from Al_ABC import ABC
-N = [20, 40, 80]
-Max = 10
-MAX_PATHS = 4
+from Al_GA_J import GA
+
+N = 20
+Max = [5, 10, 20]
+Pc = 0.8
+Pm = 0.1
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -43,21 +45,18 @@ class ProjectController(app_manager.RyuApp):
         self.adjacency = defaultdict(dict)
         self.paths = []
         self.pw = []
-    def add_ports_to_paths(self, paths, first_port, last_port):
+    def add_ports_to_paths(self, path, first_port, last_port):
         '''
         Add the ports that connects the switches for all paths
         '''
-        paths_p = []
-        for path in paths:
-            p = {}
-            in_port = first_port
-            for s1, s2 in zip(path[:-1], path[1:]):
-                out_port = self.adjacency[s1][s2]
-                p[s1] = (in_port, out_port)
-                in_port = self.adjacency[s2][s1]
-            p[path[-1]] = (in_port, last_port)
-            paths_p.append(p)
-        return paths_p
+        p = {}
+        in_port = first_port
+        for s1, s2 in zip(path[:-1], path[1:]):
+            out_port = self.adjacency[s1][s2]
+            p[s1] = (in_port, out_port)
+            in_port = self.adjacency[s2][s1]
+        p[path[-1]] = (in_port, last_port)
+        return p
 
     def generate_openflow_gid(self):
         '''
@@ -71,32 +70,31 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = ABC(self.adjacency,self.switches,src,dst,N[0],Max,MAX_PATHS)
+            alg = GA(self.adjacency,self.switches,src,dst, N, Max[0], Pc, Pm)
             alg.Do()
-            alg1 = ABC(self.adjacency,self.switches,src,dst,N[1],Max,MAX_PATHS)
+            alg1 = GA(self.adjacency,self.switches,src,dst, N, Max[1], Pc, Pm)
             alg1.Do()
-            alg2 = ABC(self.adjacency,self.switches,src,dst,N[2],Max,MAX_PATHS)
+            alg2 = GA(self.adjacency,self.switches,src,dst, N, Max[2], Pc, Pm)
             alg2.Do()
-            for solution in alg.best:
-                self.paths.append(solution.path)
-                self.pw.append(solution.fitness)
+            for gen in alg.best:
+                self.paths.append(gen.path)
+                self.pw.append(gen.fitness)
         if(self.paths[0][0]!=src):
-            for i in range(MAX_PATHS):
+            for i in range(len(self.paths)):
                 self.paths[i].reverse()
         f=open("demo.txt","w")
         f.truncate(0)
-        print("Result of ABC:")
-        for i in range(MAX_PATHS):
+        print("Result of GA:")
+        for i in range(len(self.paths)):
             stt = ",".join(str(x) for x in self.paths[i])
             stt= stt+","+str(self.pw[i])+"\n"
             f.write(stt)
             print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
         f.close()
-        sum_of_pw = sum(self.pw) * 1.0
-        paths_with_ports = self.add_ports_to_paths(self.paths, first_port, last_port)
-        switches_in_paths = set().union(*self.paths)
+        path_with_ports = self.add_ports_to_paths(self.paths[0], first_port, last_port)
+        switches_in_path = set().union(self.paths[0])
 
-        for node in switches_in_paths:
+        for node in switches_in_path:
 
             dp = self.datapath_list[node]
             ofp = dp.ofproto
@@ -104,15 +102,12 @@ class ProjectController(app_manager.RyuApp):
 
             ports = defaultdict(list)
             actions = []
-            i = 0
 
-            for path in paths_with_ports:
-                if node in path:
-                    in_port = path[node][0]
-                    out_port = path[node][1]
-                    if (out_port, self.pw[i]) not in ports[in_port]:
-                        ports[in_port].append((out_port, self.pw[i]))
-                i += 1
+            if node in path_with_ports:
+                in_port = path_with_ports[node][0]
+                out_port = path_with_ports[node][1]
+                if (out_port, self.pw[i]) not in ports[in_port]:
+                    ports[in_port].append((out_port, self.pw[0]))
 
             for in_port in ports:
 
@@ -128,55 +123,11 @@ class ProjectController(app_manager.RyuApp):
                 )
 
                 out_ports = ports[in_port]
-                # print out_ports 
+                actions = [ofp_parser.OFPActionOutput(out_ports[0][0])]
 
-                if len(out_ports) > 1:
-                    group_id = None
-                    group_new = False
-
-                    if (node, src, dst) not in self.multipath_group_ids:
-                        group_new = True
-                        self.multipath_group_ids[
-                            node, src, dst] = self.generate_openflow_gid()
-                    group_id = self.multipath_group_ids[node, src, dst]
-
-                    buckets = []
-                    # print "node at ",node," out ports : ",out_ports
-                    for port, weight in out_ports:
-                        bucket_weight = int(round((1 - weight/sum_of_pw) * 10))
-                        bucket_action = [ofp_parser.OFPActionOutput(port)]
-                        buckets.append(
-                            ofp_parser.OFPBucket(
-                                weight=bucket_weight,
-                                watch_port=port,
-                                watch_group=ofp.OFPG_ANY,
-                                actions=bucket_action
-                            )
-                        )
-
-                    if group_new:
-                        req = ofp_parser.OFPGroupMod(
-                            dp, ofp.OFPGC_ADD, ofp.OFPGT_SELECT, group_id,
-                            buckets
-                        )
-                        dp.send_msg(req)
-                    else:
-                        req = ofp_parser.OFPGroupMod(
-                            dp, ofp.OFPGC_MODIFY, ofp.OFPGT_SELECT,
-                            group_id, buckets)
-                        dp.send_msg(req)
-
-                    actions = [ofp_parser.OFPActionGroup(group_id)]
-
-                    self.add_flow(dp, 32768, match_ip, actions)
-                    self.add_flow(dp, 1, match_arp, actions)
-
-                elif len(out_ports) == 1:
-                    actions = [ofp_parser.OFPActionOutput(out_ports[0][0])]
-
-                    self.add_flow(dp, 32768, match_ip, actions)
-                    self.add_flow(dp, 1, match_arp, actions)
-        return paths_with_ports[0][src][1]
+                self.add_flow(dp, 32768, match_ip, actions)
+                self.add_flow(dp, 1, match_arp, actions)
+        return path_with_ports[src][1]
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
         # print "Adding flow ", match, actions

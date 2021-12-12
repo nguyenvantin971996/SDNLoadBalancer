@@ -21,10 +21,13 @@ from operator import itemgetter
 import os
 import random
 import time
-from Al_ABC_J import ABC
+
+from Al_GA_J import GA
 
 N = [20, 40, 80]
-iterations = 10
+Max = 10
+Pc = 0.8
+Pm = 0.1
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -67,21 +70,21 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = ABC(self.adjacency,self.switches,src,dst,N[0],iterations)
+            alg = GA(self.adjacency,self.switches,src,dst, N[0], Max, Pc, Pm)
             alg.Do()
-            alg1 = ABC(self.adjacency,self.switches,src,dst,N[1],iterations)
+            alg1 = GA(self.adjacency,self.switches,src,dst, N[1], Max, Pc, Pm)
             alg1.Do()
-            alg2 = ABC(self.adjacency,self.switches,src,dst,N[2],iterations)
+            alg2 = GA(self.adjacency,self.switches,src,dst, N[2], Max, Pc, Pm)
             alg2.Do()
-            for solution in alg.best:
-                self.paths.append(solution.path)
-                self.pw.append(solution.fitness)
+            for gen in alg.best:
+                self.paths.append(gen.path)
+                self.pw.append(gen.fitness)
         if(self.paths[0][0]!=src):
             for i in range(len(self.paths)):
                 self.paths[i].reverse()
         f=open("demo.txt","w")
         f.truncate(0)
-        print("Result of ABC:")
+        print("Result of GA:")
         for i in range(len(self.paths)):
             stt = ",".join(str(x) for x in self.paths[i])
             stt= stt+","+str(self.pw[i])+"\n"
