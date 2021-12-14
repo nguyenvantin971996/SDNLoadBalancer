@@ -274,7 +274,7 @@ TableMetric::TableMetric(QWidget *parent) :
         ui->tableWidget->setItem(x2,9,item2);
         x2+=Ds[u].count();
     }
-    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
@@ -556,7 +556,7 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
         ui->tableWidget->setItem(x2,9,item2);
         x2+=Ds[u].count();
     }
-    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     // install signal handlers
       QObject::connect(ui->horizontalSlider, &QSlider::sliderMoved,
@@ -568,6 +568,6 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
     #endif // 0
         });
       QString s = QString::number(value);
-      ui->textEdit->setText(s);
-      ui->textEdit->setAlignment(Qt::AlignCenter);
+      ui->lineEdit->setText(s);
+      ui->lineEdit->setAlignment(Qt::AlignCenter);
 }

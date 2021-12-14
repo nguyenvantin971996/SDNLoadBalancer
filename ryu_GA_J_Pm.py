@@ -21,11 +21,11 @@ from operator import itemgetter
 import os
 import random
 import time
-
+import copy
 from Al_GA_J import GA
 
-N = 20
-Max = 10
+N = 40
+Max = 100
 Pc = 0.8
 Pm = [0.1, 0.4, 0.8]
 
@@ -71,10 +71,12 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             alg = GA(self.adjacency,self.switches,src,dst, N, Max, Pc, Pm[0])
-            alg.Do()
             alg1 = GA(self.adjacency,self.switches,src,dst, N, Max, Pc, Pm[1])
-            alg1.Do()
             alg2 = GA(self.adjacency,self.switches,src,dst, N, Max, Pc, Pm[2])
+            alg1.population = copy.deepcopy(alg.population)
+            alg2.population = copy.deepcopy(alg.population)
+            alg.Do()
+            alg1.Do()
             alg2.Do()
             for gen in alg.best:
                 self.paths.append(gen.path)

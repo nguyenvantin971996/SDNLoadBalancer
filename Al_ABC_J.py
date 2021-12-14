@@ -200,7 +200,7 @@ class ABC:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.7):
+                if(self.population[i].fitness < self.population[0].fitness/0.8):
                     self.condidates.append(copy.deepcopy(self.population[i]))
     
     def GetBest(self):
@@ -212,7 +212,7 @@ class ABC:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
                     self.best.append(copy.deepcopy(self.condidates[i]))
         file1 = open('wires.txt','r')
         Lines = file1.readlines()

@@ -12,66 +12,89 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QTableWidget>
-#include <QtWidgets/QTextEdit>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_TableMetric
 {
 public:
+    QGridLayout *gridLayout;
     QTableWidget *tableWidget;
-    QTextEdit *textEdit;
-    QDialogButtonBox *buttonBox;
-    QSlider *horizontalSlider;
     QLabel *label;
+    QLineEdit *lineEdit;
+    QSlider *horizontalSlider;
 
     void setupUi(QDialog *TableMetric)
     {
         if (TableMetric->objectName().isEmpty())
             TableMetric->setObjectName(QString::fromUtf8("TableMetric"));
-        TableMetric->resize(700, 700);
-        tableWidget = new QTableWidget(TableMetric);
-        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        tableWidget->setGeometry(QRect(10, 10, 680, 640));
-        textEdit = new QTextEdit(TableMetric);
-        textEdit->setObjectName(QString::fromUtf8("textEdit"));
-        textEdit->setEnabled(true);
-        textEdit->setGeometry(QRect(140, 660, 41, 31));
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        TableMetric->resize(1000, 700);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(textEdit->sizePolicy().hasHeightForWidth());
-        textEdit->setSizePolicy(sizePolicy);
-        buttonBox = new QDialogButtonBox(TableMetric);
-        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(490, 660, 171, 31));
-        buttonBox->setOrientation(Qt::Horizontal);
-        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+        sizePolicy.setHeightForWidth(TableMetric->sizePolicy().hasHeightForWidth());
+        TableMetric->setSizePolicy(sizePolicy);
+        gridLayout = new QGridLayout(TableMetric);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        tableWidget = new QTableWidget(TableMetric);
+        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(tableWidget->sizePolicy().hasHeightForWidth());
+        tableWidget->setSizePolicy(sizePolicy1);
+        QFont font;
+        font.setPointSize(12);
+        tableWidget->setFont(font);
+
+        gridLayout->addWidget(tableWidget, 0, 0, 1, 4);
+
+        label = new QLabel(TableMetric);
+        label->setObjectName(QString::fromUtf8("label"));
+        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy2);
+        label->setFont(font);
+        label->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(label, 1, 0, 1, 1);
+
+        lineEdit = new QLineEdit(TableMetric);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lineEdit->setEnabled(true);
+        sizePolicy2.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
+        lineEdit->setSizePolicy(sizePolicy2);
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("Ubuntu"));
+        font1.setPointSize(12);
+        lineEdit->setFont(font1);
+        lineEdit->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(lineEdit, 1, 1, 1, 1);
+
         horizontalSlider = new QSlider(TableMetric);
         horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(190, 660, 281, 31));
+        horizontalSlider->setFont(font);
         horizontalSlider->setContextMenuPolicy(Qt::DefaultContextMenu);
-        horizontalSlider->setMaximum(30);
-        horizontalSlider->setValue(30);
+        horizontalSlider->setMaximum(20);
+        horizontalSlider->setValue(20);
         horizontalSlider->setOrientation(Qt::Horizontal);
         horizontalSlider->setInvertedAppearance(false);
         horizontalSlider->setInvertedControls(false);
         horizontalSlider->setTickPosition(QSlider::TicksBothSides);
-        label = new QLabel(TableMetric);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(10, 660, 121, 31));
-        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy);
-        label->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(horizontalSlider, 1, 2, 1, 1);
+
 
         retranslateUi(TableMetric);
-        QObject::connect(buttonBox, SIGNAL(accepted()), TableMetric, SLOT(accept()));
-        QObject::connect(buttonBox, SIGNAL(rejected()), TableMetric, SLOT(reject()));
 
         QMetaObject::connectSlotsByName(TableMetric);
     } // setupUi
@@ -79,12 +102,8 @@ public:
     void retranslateUi(QDialog *TableMetric)
     {
         TableMetric->setWindowTitle(QApplication::translate("TableMetric", "Result of evolutionary algorithm", nullptr));
-        textEdit->setHtml(QApplication::translate("TableMetric", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">30</p></body></html>", nullptr));
         label->setText(QApplication::translate("TableMetric", "Max of jitter (%) =", nullptr));
+        lineEdit->setText(QApplication::translate("TableMetric", "20", nullptr));
     } // retranslateUi
 
 };

@@ -18,13 +18,14 @@ from ryu.topology import event
 from collections import defaultdict
 from operator import itemgetter
 
+import copy
 import os
 import random
 import time
 from Al_ABC_J import ABC
 
-N = 20
-Max = [5, 10, 20]
+N = 40
+Max = [10, 50, 100]
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -68,10 +69,12 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             alg = ABC(self.adjacency,self.switches,src,dst,N,Max[0])
-            alg.Do()
             alg1 = ABC(self.adjacency,self.switches,src,dst,N,Max[1])
-            alg1.Do()
             alg2 = ABC(self.adjacency,self.switches,src,dst,N,Max[2])
+            alg1.population = copy.deepcopy(alg.population)
+            alg2.population = copy.deepcopy(alg.population)
+            alg.Do()
+            alg1.Do()        
             alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)

@@ -109,10 +109,9 @@ class GA:
                 self.population.append(copy.deepcopy(parents_2))
     
     def Mutation(self):
-        for i in range(self.N):
+        for i in range(self.N,len(self.population)):
             if random.uniform(0,1) < self.Pm:
-                origin = random.randint(0,self.N-1)
-                parents = copy.deepcopy(self.population[origin]) 
+                parents = copy.deepcopy(self.population[i]) 
                 ls = list(range(1,len(parents.path)-1))
                 point_mutation = random.choice(ls)
                 current_switch = parents.path[point_mutation]
@@ -124,7 +123,7 @@ class GA:
                     parents.path.append(next_switch)
                     current_switch = next_switch
                 parents.fitness = self.Evaluate(parents.path)
-                self.population.append(copy.deepcopy(parents))
+                self.population[i]=copy.deepcopy(parents)
                 
     def Selection(self):
         selected_population=[]
@@ -146,7 +145,7 @@ class GA:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.7):
+                if(self.population[i].fitness < self.population[0].fitness/0.8):
                     self.condidates.append(copy.deepcopy(self.population[i]))
     
     def GetBest(self):
@@ -158,7 +157,7 @@ class GA:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
                     self.best.append(copy.deepcopy(self.condidates[i]))
 
         file1 = open('wires.txt','r')
