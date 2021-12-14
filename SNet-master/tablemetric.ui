@@ -16,6 +16,11 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Result of evolutionary algorithm</string>
   </property>
@@ -74,7 +79,7 @@
       </font>
      </property>
      <property name="text">
-      <string>20</string>
+      <string>30</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -92,10 +97,10 @@
       <enum>Qt::DefaultContextMenu</enum>
      </property>
      <property name="maximum">
-      <number>20</number>
+      <number>30</number>
      </property>
      <property name="value">
-      <number>20</number>
+      <number>30</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

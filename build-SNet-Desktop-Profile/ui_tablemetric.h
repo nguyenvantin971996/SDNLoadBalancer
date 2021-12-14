@@ -40,6 +40,9 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(TableMetric->sizePolicy().hasHeightForWidth());
         TableMetric->setSizePolicy(sizePolicy);
+        QFont font;
+        font.setPointSize(12);
+        TableMetric->setFont(font);
         gridLayout = new QGridLayout(TableMetric);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         tableWidget = new QTableWidget(TableMetric);
@@ -49,8 +52,6 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(tableWidget->sizePolicy().hasHeightForWidth());
         tableWidget->setSizePolicy(sizePolicy1);
-        QFont font;
-        font.setPointSize(12);
         tableWidget->setFont(font);
 
         gridLayout->addWidget(tableWidget, 0, 0, 1, 4);
@@ -84,8 +85,8 @@ public:
         horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
         horizontalSlider->setFont(font);
         horizontalSlider->setContextMenuPolicy(Qt::DefaultContextMenu);
-        horizontalSlider->setMaximum(20);
-        horizontalSlider->setValue(20);
+        horizontalSlider->setMaximum(30);
+        horizontalSlider->setValue(30);
         horizontalSlider->setOrientation(Qt::Horizontal);
         horizontalSlider->setInvertedAppearance(false);
         horizontalSlider->setInvertedControls(false);
@@ -103,7 +104,7 @@ public:
     {
         TableMetric->setWindowTitle(QApplication::translate("TableMetric", "Result of evolutionary algorithm", nullptr));
         label->setText(QApplication::translate("TableMetric", "Max of jitter (%) =", nullptr));
-        lineEdit->setText(QApplication::translate("TableMetric", "20", nullptr));
+        lineEdit->setText(QApplication::translate("TableMetric", "30", nullptr));
     } // retranslateUi
 
 };
