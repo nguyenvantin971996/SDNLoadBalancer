@@ -133,7 +133,7 @@ class ACO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.colony[i].fitness < self.colony[0].fitness/0.7):
+                if(self.colony[i].fitness < self.colony[0].fitness/0.8):
                     self.condidates.append(copy.deepcopy(self.colony[i]))
     
     def GetBest(self):
@@ -145,7 +145,7 @@ class ACO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
                     self.best.append(copy.deepcopy(self.condidates[i]))
         file1 = open('wires.txt','r')
         Lines = file1.readlines()

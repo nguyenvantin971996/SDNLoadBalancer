@@ -82,6 +82,14 @@ class FA:
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
     
+    def Normalize(self,code):
+        code_2 = copy.deepcopy(code)
+        mn = min(code_2)
+        mx = max(code_2)
+        for j in range(len(self.switches)):
+            code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
+        return code
+    
     def Attract(self):
         for i in range(self.N-1):
             dk = True
@@ -104,11 +112,7 @@ class FA:
                     for j2 in range(len(self.switches)):
                         e = np.random.rand()
                         code[j2] = self.population[i].code[j2] + self.a*e       
-                code_2 = copy.deepcopy(code)
-                mn = min(code_2)
-                mx = max(code_2)
-                for j3 in range(len(self.switches)):
-                    code[j3] = -1+2*(code_2[j3]-mn)/(mx-mn)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             self.population[i].code = copy.deepcopy(code)
             self.population[i].path = copy.deepcopy(path)
@@ -123,7 +127,7 @@ class FA:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.7):
+                if(self.population[i].fitness < self.population[0].fitness/0.8):
                     self.condidates.append(copy.deepcopy(self.population[i]))
     
     def GetBest(self):
@@ -135,7 +139,7 @@ class FA:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
                     self.best.append(copy.deepcopy(self.condidates[i]))
         file1 = open('wires.txt','r')
         Lines = file1.readlines()

@@ -89,6 +89,14 @@ class PSO:
             p2 = path[i + 1]
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
+    
+    def Normalize(self,code):
+        code_2 = copy.deepcopy(code)
+        mn = min(code_2)
+        mx = max(code_2)
+        for j in range(len(self.switches)):
+            code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
+        return code
 
     def FindBest(self):
         self.population.sort(key=lambda x: x.fitness)
@@ -111,10 +119,7 @@ class PSO:
                     velocity[j] = self.w*self.population[i].velocity[j] + self.c1*r1*(self.population[i].best_local_code[j]-self.population[i].code[j])+self.c2*r2*(self.best_global_solution.code[j]-self.population[i].code[j])
                 for j in range(len(self.switches)):
                     code[j] = self.population[i].code[j] + velocity[j]
-                mn = min(code)
-                mx = max(code)
-                for ii in range(len(self.switches)):
-                    code[ii] = -1+2*(code[ii]-mn)/(mx-mn)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             self.population[i].velocity = copy.deepcopy(velocity)
             self.population[i].code = copy.deepcopy(code)
@@ -130,7 +135,7 @@ class PSO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.7):
+                if(self.population[i].fitness < self.population[0].fitness/0.8):
                     self.condidates.append(copy.deepcopy(self.population[i]))
     
     def GetBest(self):
@@ -142,7 +147,7 @@ class PSO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
                     self.best.append(copy.deepcopy(self.condidates[i]))
         file1 = open('wires.txt','r')
         Lines = file1.readlines()

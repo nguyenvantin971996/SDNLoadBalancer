@@ -18,12 +18,17 @@ from ryu.topology import event
 from collections import defaultdict
 from operator import itemgetter
 
+import copy
 import os
 import random
 import time
+from Al_FA_J import FA
 
-from Al_ACO_J import ACO
-
+N = 10
+Max = [10, 50, 100]
+y = 1
+a = 0.2
+b = 2
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
@@ -65,23 +70,30 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = ACO(self.adjacency,self.switches,src,dst,50,10,0.2,0.6,0.4,0.3,10)
+            alg = FA(self.adjacency,self.switches,src,dst,N, Max[0], y, a, b)
+            alg1 = FA(self.adjacency,self.switches,src,dst,N, Max[1], y, a, b)           
+            alg2 = FA(self.adjacency,self.switches,src,dst,N, Max[2], y, a, b)
+            alg1.population = copy.deepcopy(alg.population)
+            alg2.population = copy.deepcopy(alg.population)
             alg.Do()
+            alg1.Do()
+            alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)
+            f=open("demo.txt","w")
+            f.truncate(0)
+            for i in range(len(self.paths)):
+                stt = ",".join(str(x) for x in self.paths[i])
+                stt= stt+","+str(self.pw[i])+"\n"
+                f.write(stt)
+            f.close()
         if(self.paths[0][0]!=src):
             for i in range(len(self.paths)):
                 self.paths[i].reverse()
-        f=open("demo.txt","w")
-        f.truncate(0)
-        print("Result of ACO:")
+        print("Result of FA:")
         for i in range(len(self.paths)):
-            stt = ",".join(str(x) for x in self.paths[i])
-            stt= stt+","+str(self.pw[i])+"\n"
-            f.write(stt)
             print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
-        f.close()
         path_with_ports = self.add_ports_to_paths(self.paths[0], first_port, last_port)
         switches_in_path = set().union(self.paths[0])
 
