@@ -25,7 +25,7 @@ import time
 from Al_ABC_J import ABC
 
 N = 20
-Max = [10, 100, 1000]
+iterations = [10, 100, 1000]
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -68,9 +68,9 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = ABC(self.adjacency,self.switches,src,dst,N,Max[0])
-            alg1 = ABC(self.adjacency,self.switches,src,dst,N,Max[1])
-            alg2 = ABC(self.adjacency,self.switches,src,dst,N,Max[2])
+            alg = ABC(self.adjacency,self.switches,src,dst,N,iterations[0])
+            alg1 = ABC(self.adjacency,self.switches,src,dst,N,iterations[1])
+            alg2 = ABC(self.adjacency,self.switches,src,dst,N,iterations[2])
             alg1.population = copy.deepcopy(alg.population)
             alg2.population = copy.deepcopy(alg.population)
             alg.Do()

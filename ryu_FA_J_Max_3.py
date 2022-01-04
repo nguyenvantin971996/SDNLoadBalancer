@@ -25,7 +25,7 @@ import time
 from Al_FA_J import FA
 
 N = 10
-Max = [10, 50, 100]
+iterations = [10, 50, 100]
 y = 1
 a = 0.2
 b = 2
@@ -70,9 +70,9 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = FA(self.adjacency,self.switches,src,dst,N, Max[0], y, a, b)
-            alg1 = FA(self.adjacency,self.switches,src,dst,N, Max[1], y, a, b)           
-            alg2 = FA(self.adjacency,self.switches,src,dst,N, Max[2], y, a, b)
+            alg = FA(self.adjacency,self.switches,src,dst,N, iterations[0], y, a, b)
+            alg1 = FA(self.adjacency,self.switches,src,dst,N, iterations[1], y, a, b)           
+            alg2 = FA(self.adjacency,self.switches,src,dst,N, iterations[2], y, a, b)
             alg1.population = copy.deepcopy(alg.population)
             alg2.population = copy.deepcopy(alg.population)
             alg.Do()

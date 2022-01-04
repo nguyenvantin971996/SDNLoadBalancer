@@ -26,7 +26,7 @@ import time
 from Al_ACO_J import ACO
 
 N = 10
-Max = [10, 50, 100]
+iterations = [10, 50, 100]
 p = 0.2
 a = 0.6
 b = 0.4
@@ -73,9 +73,9 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = ACO(self.adjacency,self.switches,src,dst,N, Max[0], p, a, b, p0, Q)
-            alg1 = ACO(self.adjacency,self.switches,src,dst,N, Max[1], p, a, b, p0, Q)
-            alg2 = ACO(self.adjacency,self.switches,src,dst,N, Max[2], p, a, b, p0, Q)
+            alg = ACO(self.adjacency,self.switches,src,dst,N, iterations[0], p, a, b, p0, Q)
+            alg1 = ACO(self.adjacency,self.switches,src,dst,N, iterations[1], p, a, b, p0, Q)
+            alg2 = ACO(self.adjacency,self.switches,src,dst,N, iterations[2], p, a, b, p0, Q)
             alg1.population = copy.deepcopy(alg.population)
             alg2.population = copy.deepcopy(alg.population)
             alg.Do()
