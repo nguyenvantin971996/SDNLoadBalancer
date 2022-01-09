@@ -1,8 +1,9 @@
+from matplotlib.pyplot import vlines
 import numpy as np
 import random
 import math
 import copy
-
+from DrawChart import BarChart
 class Ant(object):
     def __init__(self):
         self.path = []
@@ -162,12 +163,19 @@ class ACO:
         if(count==3):
             f1.truncate(0)
         stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
+        sttt = "ACO: "+stt_0
         f1.write(stt_0)
         for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
+
+        values = []
+        for x in range(len(self.best)):
+            values.append(self.best[x].fitness)
+        chart = BarChart(values,sttt)
+        chart.Do()
 
     def Do(self):
         for i in range(self.Max):

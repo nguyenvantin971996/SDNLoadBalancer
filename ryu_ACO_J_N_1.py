@@ -21,9 +21,6 @@ from operator import itemgetter
 import os
 import random
 import time
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
-import numpy as np
 
 from Al_ACO_J import ACO
 
@@ -81,19 +78,6 @@ class ProjectController(app_manager.RyuApp):
             alg1.Do()
             alg2 = ACO(self.adjacency,self.switches,src,dst,N[2], iterations, p, a, b, p0, Q)
             alg2.Do()
-            fig = plt.figure()
-            ax1 = fig.add_subplot(111, projection='3d')
-
-            xpos = [1,2,3,4,5,6,7,8,9,10]
-            ypos = [2,3,4,5,1,6,2,1,7,2]
-            num_elements = len(xpos)
-            zpos = [0,0,0,0,0,0,0,0,0,0]
-            dx = np.ones(10)
-            dy = np.ones(10)
-            dz = [1,2,3,4,5,6,7,8,9,10]
-
-            ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color='#00ceaa')
-            plt.savefig('foo.png')
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)
