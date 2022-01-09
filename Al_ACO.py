@@ -49,7 +49,7 @@ class ACO:
     def GetWeightMap(self):
         weight_map={}
         temp = 0
-        with open('metric_data_2.txt') as f:
+        with open('metric_data.txt') as f:
             for line in f:
                 strt = line
                 strt2 = strt.split(':')

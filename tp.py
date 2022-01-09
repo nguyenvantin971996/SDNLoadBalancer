@@ -1,20 +1,18 @@
-# Using readlines()
-file1 = open('wires.txt','r')
-Lines = file1.readlines()
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
 
-count = 0
-# Strips the newline character
-for line in Lines:
-    if(line.strip()[0]=="="):
-        count += 1
-file1.close()
-f1 = open("wires.txt","a")
-if(count==3):
-    f1.truncate(0)
-for i in range(6):
-    stt = ",".join(["tin", "bao", "quan"])
-    stt= stt+"\n"
-    f1.write(stt)
-stt_0 = "=" + ",".join(["1", "6", "7"]) + "\n"
-f1.write(stt_0)
-f1.close()
+fig = plt.figure()
+ax1 = fig.add_subplot(111, projection='3d')
+
+xpos = [1,2,3,4,5,6,7,8,9,10]
+ypos = [2,3,4,5,1,6,2,1,7,2]
+num_elements = len(xpos)
+zpos = [0,0,0,0,0,0,0,0,0,0]
+dx = np.ones(10)
+dy = np.ones(10)
+dz = [1,2,3,4,5,6,7,8,9,10]
+
+ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color='#00ceaa')
+plt.show()
+plt.savefig('f.png')

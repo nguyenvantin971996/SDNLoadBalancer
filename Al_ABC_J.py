@@ -30,7 +30,7 @@ class ABC:
     def GetWeightMap(self):
         weight_map={}
         temp = 0
-        with open('metric_data_2.txt') as f:
+        with open('metric_data.txt') as f:
             for line in f:
                 strt = line
                 strt2 = strt.split(':')
@@ -146,7 +146,7 @@ class ABC:
             self.population[i].prob=self.population[i].fitness_vector/sum
         for i in range(self.N):
             prob.append(self.population[i].prob)
-        population= copy.deepcopy(self.population)
+        population = copy.deepcopy(self.population)
         for i in range(self.N):
             index_solution = np.random.choice(list(range(self.N)),p=prob)
             r = list(range(0,index_solution)) + list(range(index_solution+1,self.N))
