@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 import copy
+from DrawChart import BarChart
 
 class Solution(object):
     def __init__(self):
@@ -15,7 +16,7 @@ class Solution(object):
 
 class PSO:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, w, c1, c2):
+    def __init__(self,adjacency, switches, src, dst, N, Max, w, c1, c2, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src = src
@@ -30,6 +31,7 @@ class PSO:
         self.c1 = c1
         self.c2 = c2
         self.best_global_solution = self.CreateSolution()
+        self.st = st
     
     def GetWeightMap(self):
         weight_map={}
@@ -167,6 +169,13 @@ class PSO:
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
+
+        values = []
+        sttt = self.st + stt_0
+        for x in range(len(self.best)):
+            values.append(self.best[x].fitness)
+        chart = BarChart(values,sttt)
+        chart.Do()
 
     def Do(self):
         for i in range(self.Max):

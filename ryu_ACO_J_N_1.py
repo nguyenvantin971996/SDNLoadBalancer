@@ -72,11 +72,12 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = ACO(self.adjacency,self.switches,src,dst,N[0], iterations, p, a, b, p0, Q)
+            st = "ACO_N_1:"
+            alg = ACO(self.adjacency,self.switches,src,dst,N[0], iterations, p, a, b, p0, Q, st)
             alg.Do()
-            alg1 = ACO(self.adjacency,self.switches,src,dst,N[1], iterations, p, a, b, p0, Q)
+            alg1 = ACO(self.adjacency,self.switches,src,dst,N[1], iterations, p, a, b, p0, Q, st)
             alg1.Do()
-            alg2 = ACO(self.adjacency,self.switches,src,dst,N[2], iterations, p, a, b, p0, Q)
+            alg2 = ACO(self.adjacency,self.switches,src,dst,N[2], iterations, p, a, b, p0, Q, st)
             alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)

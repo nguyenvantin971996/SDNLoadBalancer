@@ -413,75 +413,18 @@ void MainWindow::on_actionShow_results_triggered()
 
 void MainWindow::on_actionShow_chart_triggered()
 {
-//    QList<double> Ds;
-//    QList<QList<double>> paths;
-//    QString filename="../wires.txt";
-//        QFile file(filename);
-//        if(!file.open(QIODevice::ReadOnly)) {
-//            QMessageBox::information(0, "error", file.errorString());
-//        }
-//        QTextStream in(&file);
-//        int i=1;
-//        while(!in.atEnd()){
-//            double s = 0;
-//            QString line = in.readLine();
-//            QString ii = QString::number(i);
-//            QStringList linelist;
-//            QList<double> path;
-//            linelist = line.split(",");
-//            for(int x=linelist.count()-1;x>=0;x--)
-//            {
-//                double r = linelist.at(x).toDouble();
-//                s+=r;
-//                path.append(r);
-//            }
-//            Ds.append(s);
-//            paths.append(path);
-//            i++;
-//        }
-
-//        QBarSet *set0 = new QBarSet("Load");
-//        for(int i=0;i<Ds.count();i++)
-//        {
-//            set0->append(Ds[i]);
-//        }
-//        QBarSeries *series = new QBarSeries();
-//        series->append(set0);
-
-//        QChart *chart = new QChart();
-//        chart->addSeries(series);
-//        chart->setTitle("Load of paths");
-//        chart->setAnimationOptions(QChart::SeriesAnimations);
-
-//        QStringList categories;
-//        for(int i=0;i<Ds.count();i++)
-//        {
-//            QString valueAsString = QString::number(i+1);
-//            categories.append("Path "+valueAsString);
-//        }
-//        QBarCategoryAxis *axisX = new QBarCategoryAxis();
-//        axisX->append(categories);
-//        chart->addAxis(axisX, Qt::AlignBottom);
-//        series->attachAxis(axisX);
-
-//        QValueAxis *axisY = new QValueAxis();
-//        axisY->setRange(0,Ds[Ds.count()-1]+50);
-//        chart->addAxis(axisY, Qt::AlignLeft);
-//        series->attachAxis(axisY);
-
-//        chart->legend()->setVisible(true);
-//        chart->legend()->setAlignment(Qt::AlignBottom);
-
-//        QChartView *chartView = new QChartView(chart);
-//        chartView->setRenderHint(QPainter::Antialiasing);
-//        QMainWindow *window = new QMainWindow(this);
-//        window->setCentralWidget(chartView);
-//        window->resize(100*Ds.count(), 600);
-//        window->show();
     QMainWindow *window = new QMainWindow(this);
     QWidget *pic = new QWidget(this);
-    pic->setStyleSheet("image: url(../foo.png)");
-    window->setCentralWidget(pic);
-    window->resize(600, 600);
-    window->show();
+    openedFilePath = QFileDialog::getOpenFileName(this,
+                                                  "Open file",
+                                                  "../*.png",
+                                                  "Image files (*.png)");
+    if (!openedFilePath.isEmpty())
+    {
+        QString st = "image: url("+openedFilePath+")";
+        pic->setStyleSheet(st);
+        window->setCentralWidget(pic);
+        window->resize(1000, 1000);
+        window->show();
+    }
 }

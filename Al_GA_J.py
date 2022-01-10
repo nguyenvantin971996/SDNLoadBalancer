@@ -2,7 +2,7 @@ import numpy as np
 import random
 import math
 import copy
-
+from DrawChart import BarChart
 class Genome(object):
     def __init__(self):
         self.path = []
@@ -10,7 +10,7 @@ class Genome(object):
 
 class GA:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, Pc, Pm):
+    def __init__(self,adjacency, switches, src, dst, N, Max, Pc, Pm, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
@@ -23,6 +23,7 @@ class GA:
         self.population = [self.CreateGenome() for i in range(self.N)]
         self.condidates = []
         self.best = []
+        self.st = st
     
     def GetWeightMap(self):
         weight_map={}
@@ -178,6 +179,13 @@ class GA:
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
+
+        values = []
+        sttt = self.st + stt_0
+        for x in range(len(self.best)):
+            values.append(self.best[x].fitness)
+        chart = BarChart(values,sttt)
+        chart.Do()
     
     def Do(self):
         for i in range(self.Max):

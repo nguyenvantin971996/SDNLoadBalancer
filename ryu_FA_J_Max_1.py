@@ -70,9 +70,10 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            alg = FA(self.adjacency,self.switches,src,dst,N, iterations[0], y, a, b)
-            alg1 = FA(self.adjacency,self.switches,src,dst,N, iterations[1], y, a, b)           
-            alg2 = FA(self.adjacency,self.switches,src,dst,N, iterations[2], y, a, b)
+            st = "FA_Max_1:"
+            alg = FA(self.adjacency,self.switches,src,dst,N, iterations[0], y, a, b, st)
+            alg1 = FA(self.adjacency,self.switches,src,dst,N, iterations[1], y, a, b, st)          
+            alg2 = FA(self.adjacency,self.switches,src,dst,N, iterations[2], y, a, b, st)
             alg1.population = copy.deepcopy(alg.population)
             alg2.population = copy.deepcopy(alg.population)
             alg.Do()

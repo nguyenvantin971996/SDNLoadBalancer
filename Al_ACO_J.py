@@ -13,7 +13,7 @@ class Ant(object):
 
 class ACO:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, p, a, b, p0, Q):
+    def __init__(self,adjacency, switches, src, dst, N, Max, p, a, b, p0, Q, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
@@ -31,6 +31,7 @@ class ACO:
         self.best = []
         self.pheromone = self.CreatePheromone()
         self.probability = self.CreateProbability()
+        self.st = st
     
     def CreatePheromone(self):
         pheromone = copy.deepcopy(self.adjacency)
@@ -137,7 +138,7 @@ class ACO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.colony[i].fitness < self.colony[0].fitness/0.7):
+                if(self.colony[i].fitness < self.colony[0].fitness/0.8):
                     self.condidates.append(copy.deepcopy(self.colony[i]))
     
     def GetBest(self):
@@ -149,7 +150,7 @@ class ACO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
                     self.best.append(copy.deepcopy(self.condidates[i]))
         file1 = open('wires.txt','r')
         Lines = file1.readlines()
@@ -163,7 +164,6 @@ class ACO:
         if(count==3):
             f1.truncate(0)
         stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
-        sttt = "ACO: "+stt_0
         f1.write(stt_0)
         for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
@@ -172,6 +172,7 @@ class ACO:
         f1.close()
 
         values = []
+        sttt = self.st + stt_0
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
         chart = BarChart(values,sttt)
