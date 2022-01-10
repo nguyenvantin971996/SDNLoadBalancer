@@ -137,7 +137,7 @@ class PSO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.8):
+                if(self.population[i].fitness < self.population[0].fitness/0.7):
                     self.condidates.append(copy.deepcopy(self.population[i]))
     
     def GetBest(self):
@@ -149,7 +149,7 @@ class PSO:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
                     self.best.append(copy.deepcopy(self.condidates[i]))
         file1 = open('wires.txt','r')
         Lines = file1.readlines()
@@ -171,7 +171,7 @@ class PSO:
         f1.close()
 
         values = []
-        sttt = self.st + stt_0
+        sttt = self.st +" "+ stt_0
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
         chart = BarChart(values,sttt)

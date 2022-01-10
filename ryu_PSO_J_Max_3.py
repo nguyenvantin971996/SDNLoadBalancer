@@ -28,8 +28,8 @@ from Al_PSO_J import PSO
 N = 40
 iterations = [10, 50, 100]
 w = 0.9
-c1 = 2
-c2 = 2
+c1 = 10
+c2 = 10
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]

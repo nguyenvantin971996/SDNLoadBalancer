@@ -236,7 +236,7 @@ class ABC:
         f1.close()
 
         values = []
-        sttt = self.st + stt_0
+        sttt = self.st+" "+ stt_0
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
         chart = BarChart(values,sttt)
