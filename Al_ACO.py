@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 import copy
+from DrawChart import BarChart
 
 class Ant(object):
     def __init__(self):
@@ -12,7 +13,7 @@ class Ant(object):
 
 class ACO:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths, p, a, b, p0, Q):
+    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths, p, a, b, p0, Q, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
@@ -31,6 +32,7 @@ class ACO:
         self.best = []
         self.pheromone = self.CreatePheromone()
         self.probability = self.CreateProbability()
+        self.st = st
     
     def CreatePheromone(self):
         pheromone = copy.deepcopy(self.adjacency)
@@ -74,37 +76,40 @@ class ACO:
                     current_switch = self.src
                     path.append(current_switch)
                 else:
-                    sum = 0
-                    for sw in neighbor_switches:
-                        x = self.pheromone[current_switch][sw]
-                        y = 1/(self.weight_map[current_switch][sw])
-                        z = pow(x,self.a)*pow(y,self.b)
-                        sum+=z
-                    prob = []
-                    for sw in neighbor_switches:
-                        x = self.pheromone[current_switch][sw]
-                        y = 1/(self.weight_map[current_switch][sw])
-                        z = pow(x,self.a)*pow(y,self.b)
-                        self.probability[current_switch][sw]=z/sum
-                        self.probability[sw][current_switch]=z/sum
-                        prob.append(z/sum)
-                    sw_max = 1
-                    prob_max = 0
-                    for sw in neighbor_switches:
-                        if(self.probability[current_switch][sw]>=prob_max):
-                            prob_max = self.probability[current_switch][sw]
-                            sw_max = sw
-                    p = np.random.rand()
-                    if(p <= self.p0):
-                        current_switch= sw_max
-                        path.append(sw_max)
-                    else:
-                        sw = np.random.choice(neighbor_switches,p=prob)
-                        current_switch= sw
-                        path.append(sw)
+                    current_switch = self.GetNextSwitch(neighbor_switches, current_switch)
+                    path.append(current_switch)
             self.colony[i].path = copy.deepcopy(path)
             self.colony[i].fitness = self.Evaluate(self.colony[i].path)
             self.colony[i].delta = 1/self.colony[i].fitness
+
+    def GetNextSwitch(self, neighbor_switches, current_switch):
+        sum = 0
+        for sw in neighbor_switches:
+            x = self.pheromone[current_switch][sw]
+            y = 1/(self.weight_map[current_switch][sw])
+            z = pow(x,self.a)*pow(y,self.b)
+            sum+=z
+        prob = []
+        for sw in neighbor_switches:
+            x = self.pheromone[current_switch][sw]
+            y = 1/(self.weight_map[current_switch][sw])
+            z = pow(x,self.a)*pow(y,self.b)
+            self.probability[current_switch][sw]=z/sum
+            self.probability[sw][current_switch]=z/sum
+            prob.append(z/sum)
+        sw_max = 1
+        prob_max = 0
+        for sw in neighbor_switches:
+            if(self.probability[current_switch][sw]>=prob_max):
+                prob_max = self.probability[current_switch][sw]
+                sw_max = sw
+        p = np.random.rand()
+        if(p <= self.p0):
+            current_switch= sw_max
+        else:
+            sw = np.random.choice(neighbor_switches,p=prob)
+            current_switch= sw
+        return current_switch
 
     def Evaluate(self,path):
         calculatedFitness = 0
@@ -140,6 +145,7 @@ class ACO:
                 k=k+1
             if(k==self.K_paths):
                 break
+
     def GetBest(self):
         self.condidates.sort(key=lambda x: x.fitness)
         self.best.append(copy.deepcopy(self.condidates[0]))
@@ -173,6 +179,13 @@ class ACO:
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
+
+        values = []
+        sttt = self.st+" "+ stt_0
+        for x in range(len(self.best)):
+            values.append(self.best[x].fitness)
+        chart = BarChart(values,sttt)
+        chart.Do()
 
     def Do(self):
         for i in range(self.Max):

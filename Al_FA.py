@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 import copy
+from DrawChart import BarChart
 
 class Solution(object):
     def __init__(self):
@@ -11,7 +12,7 @@ class Solution(object):
 
 class FA:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths, y, a, b):
+    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths, y, a, b, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
@@ -26,6 +27,7 @@ class FA:
         self.b = b
         self.condidates = []
         self.best = []
+        self.st = st
     
     def GetWeightMap(self):
         weight_map={}
@@ -83,6 +85,14 @@ class FA:
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
     
+    def Normalize(self,code):
+        code_2 = copy.deepcopy(code)
+        mn = min(code_2)
+        mx = max(code_2)
+        for j in range(len(self.switches)):
+            code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
+        return code
+    
     def Attract(self):
         for i in range(self.N-1):
             dk = True
@@ -105,11 +115,7 @@ class FA:
                     for j2 in range(len(self.switches)):
                         e = np.random.rand()
                         code[j2] = self.population[i].code[j2] + self.a*e       
-                code_2 = copy.deepcopy(code)
-                mn = min(code_2)
-                mx = max(code_2)
-                for j3 in range(len(self.switches)):
-                    code[j3] = -1+2*(code_2[j3]-mn)/(mx-mn)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             self.population[i].code = copy.deepcopy(code)
             self.population[i].path = copy.deepcopy(path)
@@ -164,6 +170,13 @@ class FA:
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
+
+        values = []
+        sttt = self.st+" "+ stt_0
+        for x in range(len(self.best)):
+            values.append(self.best[x].fitness)
+        chart = BarChart(values,sttt)
+        chart.Do()
 
     def Do(self):
         for i in range(self.Max):

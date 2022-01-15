@@ -34,7 +34,7 @@ public:
     {
         if (TableMetric->objectName().isEmpty())
             TableMetric->setObjectName(QString::fromUtf8("TableMetric"));
-        TableMetric->resize(1000, 700);
+        TableMetric->resize(1000, 800);
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -85,8 +85,8 @@ public:
         horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
         horizontalSlider->setFont(font);
         horizontalSlider->setContextMenuPolicy(Qt::DefaultContextMenu);
-        horizontalSlider->setMaximum(30);
-        horizontalSlider->setValue(30);
+        horizontalSlider->setMaximum(10);
+        horizontalSlider->setValue(10);
         horizontalSlider->setOrientation(Qt::Horizontal);
         horizontalSlider->setInvertedAppearance(false);
         horizontalSlider->setInvertedControls(false);
@@ -103,8 +103,8 @@ public:
     void retranslateUi(QDialog *TableMetric)
     {
         TableMetric->setWindowTitle(QApplication::translate("TableMetric", "Result of evolutionary algorithm", nullptr));
-        label->setText(QApplication::translate("TableMetric", "Max of jitter (%) =", nullptr));
-        lineEdit->setText(QApplication::translate("TableMetric", "30", nullptr));
+        label->setText(QApplication::translate("TableMetric", "K_paths =", nullptr));
+        lineEdit->setText(QApplication::translate("TableMetric", "10", nullptr));
     } // retranslateUi
 
 };

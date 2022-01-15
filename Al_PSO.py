@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 import copy
+from DrawChart import BarChart
 
 class Solution(object):
     def __init__(self):
@@ -15,7 +16,7 @@ class Solution(object):
 
 class PSO:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths, w, c1, c2):
+    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths, w, c1, c2, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src = src
@@ -31,6 +32,7 @@ class PSO:
         self.c1 = c1
         self.c2 = c2
         self.best_global_solution = self.CreateSolution()
+        self.st = st
     
     def GetWeightMap(self):
         weight_map={}
@@ -90,6 +92,14 @@ class PSO:
             p2 = path[i + 1]
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
+    
+    def Normalize(self,code):
+        code_2 = copy.deepcopy(code)
+        mn = min(code_2)
+        mx = max(code_2)
+        for j in range(len(self.switches)):
+            code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
+        return code
 
     def FindBest(self):
         self.population.sort(key=lambda x: x.fitness)
@@ -112,10 +122,7 @@ class PSO:
                     velocity[j] = self.w*self.population[i].velocity[j] + self.c1*r1*(self.population[i].best_local_code[j]-self.population[i].code[j])+self.c2*r2*(self.best_global_solution.code[j]-self.population[i].code[j])
                 for j in range(len(self.switches)):
                     code[j] = self.population[i].code[j] + velocity[j]
-                mn = min(code)
-                mx = max(code)
-                for ii in range(len(self.switches)):
-                    code[ii] = -1+2*(code[ii]-mn)/(mx-mn)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             self.population[i].velocity = copy.deepcopy(velocity)
             self.population[i].code = copy.deepcopy(code)
@@ -172,6 +179,12 @@ class PSO:
             f1.write(stt)
         f1.close()
 
+        values = []
+        sttt = self.st +" "+ stt_0
+        for x in range(len(self.best)):
+            values.append(self.best[x].fitness)
+        chart = BarChart(values,sttt)
+        chart.Do()
 
     def Do(self):
         for i in range(self.Max):

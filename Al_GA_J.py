@@ -3,6 +3,7 @@ import random
 import math
 import copy
 from DrawChart import BarChart
+
 class Genome(object):
     def __init__(self):
         self.path = []
@@ -179,9 +180,8 @@ class GA:
             stt= stt+"\n"
             f1.write(stt)
         f1.close()
-
         values = []
-        sttt = self.st +" "+ stt_0
+        sttt = self.st+" "+ stt_0
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
         chart = BarChart(values,sttt)
