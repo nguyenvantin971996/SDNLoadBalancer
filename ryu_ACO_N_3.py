@@ -24,7 +24,7 @@ import time
 
 from Al_ACO import ACO
 
-N = [10, 50, 100]
+N = [10, 25, 50]
 Max = 10
 K_paths = 10
 p = 0.2

@@ -16,7 +16,7 @@ class Solution(object):
 
 class PSO:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, w, c1, c2, st):
+    def __init__(self,adjacency, switches, src, dst, N, Max, K_paths, w, c1, c2, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src = src
@@ -24,6 +24,7 @@ class PSO:
         self.weight_map= self.GetWeightMap()
         self.N = N
         self.Max = Max
+        self.K_paths = K_paths
         self.population = [self.CreateSolution() for i in range(self.N)]
         self.condidates = []
         self.best = []
@@ -121,7 +122,7 @@ class PSO:
                     velocity[j] = self.w*self.population[i].velocity[j] + self.c1*r1*(self.population[i].best_local_code[j]-self.population[i].code[j])+self.c2*r2*(self.best_global_solution.code[j]-self.population[i].code[j])
                 for j in range(len(self.switches)):
                     code[j] = self.population[i].code[j] + velocity[j]
-                code = self.Normalize(code)
+                # code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             self.population[i].velocity = copy.deepcopy(velocity)
             self.population[i].code = copy.deepcopy(code)
@@ -130,27 +131,38 @@ class PSO:
 
     def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
-        for i in range(len(self.population)):
+        condidate = []
+        condidate.append(copy.deepcopy(self.population[0]))
+        k=1
+        for i in range(1,len(self.population)):
             dk_3 = False
-            for solution in self.condidates:
-                if(tuple(solution.path)==tuple(self.population[i].path)):
+            for member in condidate:
+                if(tuple(member.path)==tuple(self.population[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.7):
-                    self.condidates.append(copy.deepcopy(self.population[i]))
+                condidate.append(copy.deepcopy(self.population[i]))
+                k=k+1
+            if(k==self.K_paths):
+                break
+        self.condidates.extend(copy.deepcopy(condidate))
     
-    def GetBest(self):
+    def GetBest(self,iter):
+        self.best.clear()
         self.condidates.sort(key=lambda x: x.fitness)
-        for i in range(len(self.condidates)):
+        self.best.append(copy.deepcopy(self.condidates[0]))
+        k=1
+        for i in range(1,len(self.condidates)):
             dk_3 = False
             for solution in self.best:
                 if(tuple(solution.path)==tuple(self.condidates[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
-                    self.best.append(copy.deepcopy(self.condidates[i]))
+                self.best.append(copy.deepcopy(self.condidates[i]))
+                k=k+1
+            if(k==self.K_paths):
+                break
         file1 = open('wires.txt','r')
         Lines = file1.readlines()
         count = 0
@@ -162,7 +174,7 @@ class PSO:
         f1 = open("wires.txt","a")
         if(count==3):
             f1.truncate(0)
-        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
+        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(iter)]) + "\n"
         f1.write(stt_0)
         for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
@@ -182,4 +194,5 @@ class PSO:
             self.FindBest()
             self.Update()
             self.MemorizeCondidates()
-        self.GetBest()
+            if(i==9 or i==24 or i==(self.Max-1)):
+                self.GetBest(i+1)

@@ -11,20 +11,22 @@ class Genome(object):
 
 class GA:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, Pc, Pm, st):
+    def __init__(self,adjacency, switches, src, dst,  N, Max, K_paths, Pc, Pm, Ts, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
         self.dst = dst
-        self.weight_map = self.GetWeightMap()
+        self.weight_map= self.GetWeightMap()
         self.N = N
         self.Max = Max
         self.Pm = Pm
         self.Pc = Pc
+        self.K_paths = K_paths
         self.population = [self.CreateGenome() for i in range(self.N)]
         self.condidates = []
         self.best = []
         self.st = st
+        self.Ts = Ts
     
     def GetWeightMap(self):
         weight_map={}
@@ -94,24 +96,29 @@ class GA:
             if(dk==True):
                 break
         return parents_1, parents_2
-
+    
     def Crossover(self):
-        for i in range(self.N):
+        children = []
+        for i in range(0,self.N,2):
+            father = random.randint(0,self.N-1)
+            mother = random.randint(0,self.N-1)
+            parents_1 = copy.deepcopy(self.population[father])
+            parents_2 = copy.deepcopy(self.population[mother])
             if random.uniform(0,1) < self.Pc:
-                father = random.randint(0,self.N-1)
-                mother = random.randint(0,self.N-1)
-                parents_1 = copy.deepcopy(self.population[father])
-                parents_2 = copy.deepcopy(self.population[mother])
-                parents_1, parents_2 = self.ExchangeGenes(parents_1, parents_2)
-                parents_1 = self.CorrectGenome(parents_1)
-                parents_2 = self.CorrectGenome(parents_2)
-                parents_1.fitness = self.Evaluate(parents_1.path)
-                parents_2.fitness = self.Evaluate(parents_2.path)
-                self.population.append(copy.deepcopy(parents_1))
-                self.population.append(copy.deepcopy(parents_2))
+                child_1, child_2 = self.ExchangeGenes(parents_1, parents_2)
+                child_1 = self.CorrectGenome(child_1)
+                child_2  = self.CorrectGenome(child_2 )
+                child_1.fitness = self.Evaluate(child_1.path)
+                child_2.fitness = self.Evaluate(child_2.path)
+                children.append(copy.deepcopy(child_1))
+                children.append(copy.deepcopy(child_2))
+            else:
+                children.append(copy.deepcopy(parents_1))
+                children.append(copy.deepcopy(parents_2))
+        self.population = copy.deepcopy(children)
     
     def Mutation(self):
-        for i in range(self.N,len(self.population)):
+        for i in range(len(self.population)):
             if random.uniform(0,1) < self.Pm:
                 parents = copy.deepcopy(self.population[i]) 
                 ls = list(range(1,len(parents.path)-1))
@@ -125,43 +132,52 @@ class GA:
                     parents.path.append(next_switch)
                     current_switch = next_switch
                 parents.fitness = self.Evaluate(parents.path)
-                self.population[i]=copy.deepcopy(parents)
+                self.population[i] = copy.deepcopy(parents)
                 
     def Selection(self):
         selected_population=[]
         for i in range(self.N):
-            k_1 = random.randint(0,len(self.population)-1)
-            k_2 = random.randint(0,len(self.population)-1)
-            if(self.population[k_1].fitness<self.population[k_2].fitness):
-                selected_population.append(self.population[k_1])
-            else:
-                selected_population.append(self.population[k_2])
+            selected_index = np.random.randint(0,len(self.population)-1)
+            for ix in np.random.randint(0,len(self.population)-1,self.Ts-1):
+                if(self.population[ix].fitness<self.population[selected_index].fitness):
+                    selected_index = ix
+            selected_population.append(self.population[selected_index])
         self.population = copy.deepcopy(selected_population)
     
     def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
-        for i in range(len(self.population)):
+        condidate = []
+        condidate.append(copy.deepcopy(self.population[0]))
+        k=1
+        for i in range(1,len(self.population)):
             dk_3 = False
-            for genome in self.condidates:
+            for genome in condidate:
                 if(tuple(genome.path)==tuple(self.population[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.8):
-                    self.condidates.append(copy.deepcopy(self.population[i]))
+                condidate.append(copy.deepcopy(self.population[i]))
+                k=k+1
+            if(k==self.K_paths):
+                break
+        self.condidates.extend(copy.deepcopy(condidate))
     
-    def GetBest(self):
+    def GetBest(self,iter):
+        self.best.clear()
         self.condidates.sort(key=lambda x: x.fitness)
-        for i in range(len(self.condidates)):
+        self.best.append(copy.deepcopy(self.condidates[0]))
+        k=1
+        for i in range(1,len(self.condidates)):
             dk_3 = False
             for genome in self.best:
                 if(tuple(genome.path)==tuple(self.condidates[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
-                    self.best.append(copy.deepcopy(self.condidates[i]))
-
+                self.best.append(copy.deepcopy(self.condidates[i]))
+                k=k+1
+            if(k==self.K_paths):
+                break
         file1 = open('wires.txt','r')
         Lines = file1.readlines()
         count = 0
@@ -173,15 +189,16 @@ class GA:
         f1 = open("wires.txt","a")
         if(count==3):
             f1.truncate(0)
-        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max), "Pc = "+str(self.Pc), "Pm = "+str(self.Pm)]) + "\n"
+        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(iter), "Pc = "+str(self.Pc), "Pm = "+str(self.Pm),"Ts = "+str(self.Ts)]) + "\n"
         f1.write(stt_0)
         for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
-            stt= stt+"\n"
+            stt = stt+"\n"
             f1.write(stt)
         f1.close()
+    
         values = []
-        sttt = self.st+" "+ stt_0
+        sttt = self.st +" "+ stt_0
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
         chart = BarChart(values,sttt)
@@ -193,4 +210,5 @@ class GA:
             self.Mutation()
             self.Selection()
             self.MemorizeCondidates()
-        self.GetBest()
+            if(i==9 or i==49 or i==(self.Max-1)):
+                self.GetBest(i+1)

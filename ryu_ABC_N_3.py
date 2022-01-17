@@ -23,8 +23,8 @@ import random
 import time
 from Al_ABC import ABC
 
-N = [10, 40, 80]
-iterations = 50
+N = [25, 50, 100]
+Max = 30
 K_paths = 10
 
 class ProjectController(app_manager.RyuApp):
@@ -71,11 +71,11 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "ABC_N_3:"
-            alg = ABC(self.adjacency,self.switches,src,dst,N[0],iterations,K_paths,st)
+            alg = ABC(self.adjacency,self.switches,src,dst,N[0],Max,K_paths,st)
             alg.Do()
-            alg1 = ABC(self.adjacency,self.switches,src,dst,N[1],iterations,K_paths,st)
+            alg1 = ABC(self.adjacency,self.switches,src,dst,N[1],Max,K_paths,st)
             alg1.Do()
-            alg2 = ABC(self.adjacency,self.switches,src,dst,N[2],iterations,K_paths,st)
+            alg2 = ABC(self.adjacency,self.switches,src,dst,N[2],Max,K_paths,st)
             alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)

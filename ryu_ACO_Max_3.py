@@ -23,10 +23,10 @@ import os
 import random
 import time
 
-from Al_ACO import ACO
+from Al_ACO_Max import ACO
 
-N = 40
-iterations = [10, 50, 100]
+N = 30
+Max = 50
 K_paths = 10
 p = 0.2
 a = 0.6
@@ -77,14 +77,8 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "ACO_Max_3:"
-            alg = ACO(self.adjacency,self.switches,src,dst,N, iterations[0], K_paths, p, a, b, p0, Q, st)
-            alg1 = ACO(self.adjacency,self.switches,src,dst,N, iterations[1], K_paths, p, a, b, p0, Q, st)
-            alg2 = ACO(self.adjacency,self.switches,src,dst,N, iterations[2], K_paths, p, a, b, p0, Q, st)
-            alg1.colony = copy.deepcopy(alg.colony)
-            alg2.colony = copy.deepcopy(alg.colony)
+            alg = ACO(self.adjacency,self.switches,src,dst,N, Max, K_paths, p, a, b, p0, Q, st)
             alg.Do()
-            alg1.Do()        
-            alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

@@ -22,10 +22,10 @@ import copy
 import os
 import random
 import time
-from Al_FA import FA
+from Al_FA_Max import FA
 
-N = 40
-iterations = [10, 50, 100]
+N = 30
+Max = 50
 K_paths = 10
 y = 1
 a = 0.2
@@ -46,7 +46,7 @@ class ProjectController(app_manager.RyuApp):
         self.adjacency = defaultdict(dict)
         self.paths = []
         self.pw = []
-        self.sw = []
+        self.sw = 0
 
     def add_ports_to_paths(self, path, first_port, last_port):
         '''
@@ -74,14 +74,8 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "FA_Max_3:"
-            alg = FA(self.adjacency,self.switches,src,dst,N, iterations[0],K_paths, y, a, b, st)
-            alg1 = FA(self.adjacency,self.switches,src,dst,N, iterations[1],K_paths, y, a, b, st)           
-            alg2 = FA(self.adjacency,self.switches,src,dst,N, iterations[2],K_paths, y, a, b, st)
-            alg1.population = copy.deepcopy(alg.population)
-            alg2.population = copy.deepcopy(alg.population)
+            alg = FA(self.adjacency,self.switches,src,dst,N, Max,K_paths, y, a, b, st)
             alg.Do()
-            alg1.Do()
-            alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

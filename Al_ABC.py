@@ -126,7 +126,7 @@ class ABC:
                         code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
                     else:
                         code[ii] = solution.code[ii]
-                code = self.Normalize(code)
+                # code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             solution.code = copy.deepcopy(code)
             solution.path = copy.deepcopy(path)
@@ -165,7 +165,7 @@ class ABC:
                         code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
                     else:
                         code[ii] = solution.code[ii]
-                code = self.Normalize(code)
+                # code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             solution.code = copy.deepcopy(code)
             solution.path = copy.deepcopy(path)
@@ -196,19 +196,21 @@ class ABC:
     
     def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
-        self.condidates.append(copy.deepcopy(self.population[0]))
+        condidate = []
+        condidate.append(copy.deepcopy(self.population[0]))
         k=1
         for i in range(1,len(self.population)):
             dk_3 = False
-            for solution in self.condidates:
-                if(tuple(solution.path)==tuple(self.population[i].path)):
+            for member in condidate:
+                if(tuple(member.path)==tuple(self.population[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.condidates.append(copy.deepcopy(self.population[i]))
+                condidate.append(copy.deepcopy(self.population[i]))
                 k=k+1
             if(k==self.K_paths):
                 break
+        self.condidates.extend(copy.deepcopy(condidate))
     
     def GetBest(self):
         self.condidates.sort(key=lambda x: x.fitness)
@@ -238,7 +240,7 @@ class ABC:
             f1.truncate(0)
         stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
         f1.write(stt_0)
-        for i in range(self.K_paths):
+        for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
             stt= stt+"\n"
             f1.write(stt)

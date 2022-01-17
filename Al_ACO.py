@@ -132,7 +132,8 @@ class ACO:
      
     def MemorizeCondidates(self):
         self.colony.sort(key=lambda x: x.fitness)
-        self.condidates.append(copy.deepcopy(self.colony[0]))
+        condidate = []
+        condidate.append(copy.deepcopy(self.colony[0]))
         k=1
         for i in range(1,len(self.colony)):
             dk_3 = False
@@ -145,6 +146,7 @@ class ACO:
                 k=k+1
             if(k==self.K_paths):
                 break
+        self.condidates.extend(copy.deepcopy(condidate))
 
     def GetBest(self):
         self.condidates.sort(key=lambda x: x.fitness)
@@ -174,7 +176,7 @@ class ACO:
             f1.truncate(0)
         stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
         f1.write(stt_0)
-        for i in range(self.K_paths):
+        for i in range(len(self.best)):
             stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
             stt= stt+"\n"
             f1.write(stt)

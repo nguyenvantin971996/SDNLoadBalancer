@@ -25,10 +25,11 @@ import copy
 from Al_GA import GA
 
 N = 40
-iterations = 50
+Max = 50
 K_paths = 10
 Pc = 0.8
 Pm = [0.1, 0.4, 0.8]
+Ts = 5
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -74,9 +75,9 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "GA_Pm_3:"
-            alg = GA(self.adjacency,self.switches,src,dst, N, iterations, Pc, Pm[0], K_paths, st)
-            alg1 = GA(self.adjacency,self.switches,src,dst, N, iterations, Pc, Pm[1], K_paths, st)
-            alg2 = GA(self.adjacency,self.switches,src,dst, N, iterations, Pc, Pm[2], K_paths, st)
+            alg = GA(self.adjacency,self.switches,src,dst, N, Max, K_paths, Pc, Pm[0], Ts, st)
+            alg1 = GA(self.adjacency,self.switches,src,dst, N, Max, K_paths, Pc, Pm[1], Ts, st)
+            alg2 = GA(self.adjacency,self.switches,src,dst, N, Max, K_paths, Pc, Pm[2], Ts, st)
             alg1.population = copy.deepcopy(alg.population)
             alg2.population = copy.deepcopy(alg.population)
             alg.Do()

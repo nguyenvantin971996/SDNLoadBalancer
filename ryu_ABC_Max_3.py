@@ -22,10 +22,10 @@ import copy
 import os
 import random
 import time
-from Al_ABC import ABC
+from Al_ABC_Max import ABC
 
-N = 40
-iterations = [10, 100, 500]
+N = 60
+Max = 100
 K_paths = 10
 
 class ProjectController(app_manager.RyuApp):
@@ -72,14 +72,8 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "ABC_Max_3:"
-            alg = ABC(self.adjacency,self.switches,src,dst,N,iterations[0],K_paths,st)
-            alg1 = ABC(self.adjacency,self.switches,src,dst,N,iterations[1],K_paths,st)
-            alg2 = ABC(self.adjacency,self.switches,src,dst,N,iterations[2],K_paths,st)
-            alg1.population = copy.deepcopy(alg.population)
-            alg2.population = copy.deepcopy(alg.population)
+            alg = ABC(self.adjacency,self.switches,src,dst,N,Max,K_paths,st)
             alg.Do()
-            alg1.Do()        
-            alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

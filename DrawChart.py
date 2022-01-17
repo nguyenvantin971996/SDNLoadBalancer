@@ -8,7 +8,7 @@ matplotlib.rc('font', **font)
 class BarChart:
     def __init__(self, values, stt):
         self.values = values
-        self.stt = stt
+        self.stt = stt + ".png"
 
     def Do(self):
         fig = plt.figure(figsize=(10,8))
@@ -50,7 +50,7 @@ class BarChart:
         ax.xaxis.set_ticklabels(xlabels)
         ax.yaxis.set_ticklabels(ylabels)
         for i in range(NumberPaths):
-            ax.text(x[i]-0.5, y[i]-0.2, dz[i], str(dz[i]),color='black', backgroundcolor= 'orange', rotation='vertical', horizontalalignment='left', verticalalignment='bottom')
+            ax.text(x[i]-0.05*NumberPaths, y[i]-0.75/NumberPaths, dz[i], str(dz[i]),color='black',size = 8, backgroundcolor= 'orange', rotation='vertical', horizontalalignment='left', verticalalignment='bottom')
         plt.savefig(self.stt,dpi = 200)
 #         plt.show()
 # cc = BarChart([430,450,440,470,450,440,470,450,440,470],"xxx")

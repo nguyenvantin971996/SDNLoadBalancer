@@ -23,10 +23,10 @@ import os
 import random
 import time
 
-from Al_PSO import PSO
+from Al_PSO_Max import PSO
 
-N = 40
-iterations = [10, 50, 100]
+N = 30
+Max = 100
 K_paths = 10
 w = 0.9
 c1 = 10
@@ -76,14 +76,8 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "PSO_Max_3:"
-            alg = PSO(self.adjacency,self.switches,src,dst,N, iterations[0],K_paths, w, c1, c2, st)
-            alg1 = PSO(self.adjacency,self.switches,src,dst,N, iterations[1],K_paths, w, c1, c2, st)
-            alg2 = PSO(self.adjacency,self.switches,src,dst,N, iterations[2],K_paths, w, c1, c2, st)
-            alg1.population = copy.deepcopy(alg.population)
-            alg2.population = copy.deepcopy(alg.population)
+            alg = PSO(self.adjacency,self.switches,src,dst,N, Max,K_paths, w, c1, c2, st)
             alg.Do()
-            alg1.Do()
-            alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

@@ -23,8 +23,8 @@ import random
 import time
 from Al_FA import FA
 
-N = [10, 40, 80]
-iterations = 20
+N = [25, 50, 100]
+Max = 20
 K_paths = 10
 y = 1
 a = 0.2
@@ -73,11 +73,11 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "FA_N_3:"
-            alg = FA(self.adjacency,self.switches,src,dst,N[0], iterations,K_paths, y, a, b, st)
+            alg = FA(self.adjacency,self.switches,src,dst,N[0], Max,K_paths, y, a, b, st)
             alg.Do()
-            alg1 = FA(self.adjacency,self.switches,src,dst,N[1], iterations,K_paths, y, a, b, st)
+            alg1 = FA(self.adjacency,self.switches,src,dst,N[1], Max,K_paths, y, a, b, st)
             alg1.Do()
-            alg2 = FA(self.adjacency,self.switches,src,dst,N[2], iterations,K_paths, y, a, b, st)
+            alg2 = FA(self.adjacency,self.switches,src,dst,N[2], Max,K_paths, y, a, b, st)
             alg2.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)

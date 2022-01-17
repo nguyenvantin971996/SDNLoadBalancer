@@ -22,13 +22,14 @@ import os
 import random
 import time
 import copy
-from Al_GA import GA
+from Al_GA_Max import GA
 
-N = 40
-iterations = [10, 50, 100]
+N = 50
+Max = 500
 K_paths = 10
 Pc = 0.8
-Pm = 0.1
+Pm = 0.5
+Ts = 5
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -74,14 +75,8 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "GA_Max_3:"
-            alg = GA(self.adjacency,self.switches,src,dst, N, iterations[0],Pc, Pm, K_paths, st)
-            alg1 = GA(self.adjacency,self.switches,src,dst, N, iterations[1], Pc, Pm, K_paths, st)
-            alg2 = GA(self.adjacency,self.switches,src,dst, N, iterations[2], Pc, Pm, K_paths, st)
-            alg1.population = copy.deepcopy(alg.population)
-            alg2.population = copy.deepcopy(alg.population)
+            alg = GA(self.adjacency,self.switches,src,dst, N, Max, K_paths, Pc, Pm, Ts, st)
             alg.Do()
-            alg1.Do()
-            alg2.Do()
             for gen in alg.best:
                 self.paths.append(gen.path)
                 self.pw.append(gen.fitness)

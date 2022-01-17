@@ -9,10 +9,13 @@ class Solution(object):
         self.path = []
         self.code = []
         self.fitness = float('inf')
+        self.fitness_vector = 0
+        self.counter = 0
+        self.prob = 0
 
-class FA:
+class ABC:
 
-    def __init__(self,adjacency, switches, src, dst, N, Max, y, a, b, st):
+    def __init__(self,adjacency, switches, src, dst, N, Max, st):
         self.adjacency = adjacency
         self.switches = switches
         self.src= src
@@ -21,9 +24,7 @@ class FA:
         self.N = N
         self.Max = Max
         self.population = [self.CreateSolution() for i in range(self.N)]
-        self.y = y
-        self.a = a
-        self.b = b
+        self.limit = int(N*len(switches)/2)
         self.condidates = []
         self.best = []
         self.st = st
@@ -83,7 +84,7 @@ class FA:
             p2 = path[i + 1]
             calculatedFitness += self.weight_map[p1][p2]
         return calculatedFitness
-    
+
     def Normalize(self,code):
         code_2 = copy.deepcopy(code)
         mn = min(code_2)
@@ -91,34 +92,106 @@ class FA:
         for j in range(len(self.switches)):
             code[j] = -1+2*(code_2[j]-mn)/(mx-mn)
         return code
-    
-    def Attract(self):
-        for i in range(self.N-1):
-            dk = True
-            code = [0 for i in range(len(self.switches))]
-            path = []
+
+    def InitializationPhase(self):
+        for i in range(self.N):
+            mn = min(self.population[i].code)
+            mx = max(self.population[i].code)
+            self.population[i].code.clear()
+            path=[]
+            code = []
             while(len(path)==0):
-                for j in range(i+1,self.N):
-                    if(self.population[i].fitness >= self.population[j].fitness):
-                        dk = False
-                        r2 = 0
-                        for j1 in range(len(self.switches)):
-                            number = self.population[i].code[j1] - self.population[j].code[j1]
-                            r2 += pow(number,2)
-                        beta = self.b*math.exp(-self.y*r2)
-                        for j2 in range(len(self.switches)):
-                            e = np.random.rand()
-                            code[j2] = self.population[i].code[j2] + beta*(self.population[j].code[j2] - self.population[i].code[j2]) + self.a*e
-                        break
-                if(dk):
-                    for j2 in range(len(self.switches)):
-                        e = np.random.rand()
-                        code[j2] = self.population[i].code[j2] + self.a*e       
-                code = self.Normalize(code)
+                code.clear()
+                path.clear()
+                code = copy.deepcopy([(mn+np.random.rand()*(mx-mn)) for i in range(len(self.switches))])
                 path = copy.deepcopy(self.Decode(code))
             self.population[i].code = copy.deepcopy(code)
             self.population[i].path = copy.deepcopy(path)
             self.population[i].fitness = self.Evaluate(self.population[i].path)
+    
+    def EmployeedPhase(self):
+        population = copy.deepcopy(self.population)
+        for i in range(self.N):
+            r = list(range(0,i)) + list(range(i+1,self.N))
+            coceg = random.choice(r)
+            solution = copy.deepcopy(self.population[i])
+            code = copy.deepcopy(self.population[i].code)
+            path = []
+            while(len(path)==0):
+                d = np.random.randint(len(self.switches)-1)
+                fi = random.uniform(-1,1)
+                for ii in range(len(self.switches)):
+                    if(ii==d):
+                        code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
+                    else:
+                        code[ii] = solution.code[ii]
+                # code = self.Normalize(code)
+                path = copy.deepcopy(self.Decode(code))
+            solution.code = copy.deepcopy(code)
+            solution.path = copy.deepcopy(path)
+            solution.fitness = self.Evaluate(solution.path)
+            if(solution.fitness<population[i].fitness):
+                solution.counter = 0
+                population[i] = copy.deepcopy(solution)
+            else:
+                population[i].counter+=1
+        self.population=copy.deepcopy(population)
+
+    def OnlookedPhase(self):
+        for i in range(self.N):
+            self.population[i].fitness_vector = 1/self.population[i].fitness
+        sum = 0
+        for i in range(self.N):
+            sum+=self.population[i].fitness_vector
+        prob=[]
+        for i in range(self.N):
+            self.population[i].prob=self.population[i].fitness_vector/sum
+        for i in range(self.N):
+            prob.append(self.population[i].prob)
+        population = copy.deepcopy(self.population)
+        for i in range(self.N):
+            index_solution = np.random.choice(list(range(self.N)),p=prob)
+            r = list(range(0,index_solution)) + list(range(index_solution+1,self.N))
+            coceg = random.choice(r)
+            solution = copy.deepcopy(self.population[index_solution])
+            code =copy.deepcopy(solution.code)
+            path = []
+            while(len(path)==0):
+                d = np.random.randint(len(self.switches)-1)
+                fi = random.uniform(-1,1)
+                for ii in range(len(self.switches)):
+                    if(ii==d):
+                        code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
+                    else:
+                        code[ii] = solution.code[ii]
+                # code = self.Normalize(code)
+                path = copy.deepcopy(self.Decode(code))
+            solution.code = copy.deepcopy(code)
+            solution.path = copy.deepcopy(path)
+            solution.fitness = self.Evaluate(solution.path)
+            if(solution.fitness<population[index_solution].fitness):
+                solution.counter = 0
+                population[index_solution] = copy.deepcopy(solution)
+            else:
+                population[index_solution].counter+=1
+        self.population=copy.deepcopy(population)
+
+    def ScoutPhase(self):
+        for i in range(self.N):
+            if self.population[i].counter > self.limit:
+                mn = min(self.population[i].code)
+                mx = max(self.population[i].code)
+                self.population[i].code.clear()
+                path=[]
+                code = []
+                while(len(path)==0):
+                    code.clear()
+                    path.clear()
+                    code = copy.deepcopy([(mn+np.random.rand()*(mx-mn)) for i in range(len(self.switches))])
+                    path = copy.deepcopy(self.Decode(code))
+                self.population[i].code = copy.deepcopy(code)
+                self.population[i].path = copy.deepcopy(path)
+                self.population[i].fitness = self.Evaluate(self.population[i].path)
     
     def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
@@ -129,7 +202,7 @@ class FA:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.population[i].fitness < self.population[0].fitness/0.7):
+                if(self.population[i].fitness < self.population[0].fitness/0.8):
                     self.condidates.append(copy.deepcopy(self.population[i]))
     
     def GetBest(self):
@@ -141,7 +214,7 @@ class FA:
                     dk_3 = True
                     break
             if(dk_3!=True):
-                if(self.condidates[i].fitness < self.condidates[0].fitness/0.7):
+                if(self.condidates[i].fitness < self.condidates[0].fitness/0.8):
                     self.best.append(copy.deepcopy(self.condidates[i]))
         file1 = open('wires.txt','r')
         Lines = file1.readlines()
@@ -170,7 +243,10 @@ class FA:
         chart.Do()
 
     def Do(self):
+        self.InitializationPhase()
         for i in range(self.Max):
-            self.Attract()
+            self.EmployeedPhase()
+            self.OnlookedPhase()
+            self.ScoutPhase()
             self.MemorizeCondidates()
         self.GetBest()

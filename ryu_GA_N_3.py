@@ -24,11 +24,12 @@ import time
 
 from Al_GA import GA
 
-N = [10, 40, 80]
-iterations = 50
-K_paths = 10
+N = [25, 50, 100]
+Max = 100
 Pc = 0.8
-Pm = 0.1
+Pm = 0.5
+K_paths = 10
+Ts = 5
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -74,11 +75,11 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "GA_N_3:"
-            alg = GA(self.adjacency,self.switches,src,dst, N[0], iterations, Pc, Pm, K_paths, st)
+            alg = GA(self.adjacency,self.switches,src,dst, N[0], Max, K_paths, Pc, Pm, Ts, st)
             alg.Do()
-            alg1 = GA(self.adjacency,self.switches,src,dst, N[1], iterations, Pc, Pm, K_paths, st)
+            alg1 = GA(self.adjacency,self.switches,src,dst, N[1], Max, K_paths, Pc, Pm, Ts, st)
             alg1.Do()
-            alg2 = GA(self.adjacency,self.switches,src,dst, N[2], iterations, Pc, Pm, K_paths, st)
+            alg2 = GA(self.adjacency,self.switches,src,dst, N[2], Max, K_paths, Pc, Pm, Ts, st)
             alg2.Do()
             for gen in alg.best:
                 self.paths.append(gen.path)
