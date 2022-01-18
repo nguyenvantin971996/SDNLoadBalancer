@@ -137,12 +137,12 @@ class ACO:
         k=1
         for i in range(1,len(self.colony)):
             dk_3 = False
-            for Ant in self.condidates:
-                if(tuple(Ant.path)==tuple(self.colony[i].path)):
+            for ant in condidate:
+                if(tuple(ant.path)==tuple(self.colony[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.condidates.append(copy.deepcopy(self.colony[i]))
+                condidate.append(copy.deepcopy(self.colony[i]))
                 k=k+1
             if(k==self.K_paths):
                 break
