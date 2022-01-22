@@ -29,6 +29,7 @@ class ABC:
         self.condidates = []
         self.best = []
         self.st = st
+        self.lines = []
     
     def GetWeightMap(self):
         weight_map={}
@@ -197,9 +198,8 @@ class ABC:
     def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
         condidate = []
-        condidate.append(copy.deepcopy(self.population[0]))
-        k=1
-        for i in range(1,len(self.population)):
+        k=0
+        for i in range(len(self.population)):
             dk_3 = False
             for member in condidate:
                 if(tuple(member.path)==tuple(self.population[i].path)):
@@ -212,11 +212,11 @@ class ABC:
                 break
         self.condidates.extend(copy.deepcopy(condidate))
     
-    def GetBest(self):
+    def GetBest(self,iteration):
         self.condidates.sort(key=lambda x: x.fitness)
-        self.best.append(copy.deepcopy(self.condidates[0]))
-        k=1
-        for i in range(1,len(self.condidates)):
+        self.best.clear()
+        k=0
+        for i in range(len(self.condidates)):
             dk_3 = False
             for solution in self.best:
                 if(tuple(solution.path)==tuple(self.condidates[i].path)):
@@ -227,37 +227,45 @@ class ABC:
                 k=k+1
             if(k==self.K_paths):
                 break
-        file1 = open('wires.txt','r')
-        Lines = file1.readlines()
-        count = 0
-        for line in Lines:
-            if(line.strip()[0] == "N"):
-                count += 1
-        file1.close()
-
-        f1 = open("wires.txt","a")
-        if(count==3):
-            f1.truncate(0)
-        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
-        f1.write(stt_0)
-        for i in range(len(self.best)):
-            stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
-            stt= stt+"\n"
-            f1.write(stt)
-        f1.close()
-
+        
         values = []
-        sttt = self.st+" "+ stt_0
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
-        chart = BarChart(values,sttt)
-        chart.Do()
+        self.lines.append(sum(values))
+
+        if(iteration==self.Max):
+            file1 = open('wires.txt','r')
+            Lines = file1.readlines()
+            count = 0
+            for line in Lines:
+                if(line.strip()[0] == "N"):
+                    count += 1
+            file1.close()
+
+            f1 = open("wires.txt","a")
+            if(count==3):
+                f1.truncate(0)
+            stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
+            f1.write(stt_0)
+            for i in range(len(self.best)):
+                stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
+                stt= stt+"\n"
+                f1.write(stt)
+            f1.close()
+
+            sttt = self.st+" "+ stt_0
+            chart = BarChart(values,sttt)
+            chart.Do()
 
     def Do(self):
+        self.MemorizeCondidates()
+        self.GetBest(0)
         self.InitializationPhase()
         for i in range(self.Max):
             self.EmployeedPhase()
             self.OnlookedPhase()
             self.ScoutPhase()
             self.MemorizeCondidates()
-        self.GetBest()
+            self.GetBest(i+1)
+            
+            

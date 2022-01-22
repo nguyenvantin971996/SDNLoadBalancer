@@ -33,6 +33,7 @@ class ACO:
         self.pheromone = self.CreatePheromone()
         self.probability = self.CreateProbability()
         self.st = st
+        self.lines = []
     
     def CreatePheromone(self):
         pheromone = copy.deepcopy(self.adjacency)
@@ -133,27 +134,25 @@ class ACO:
     def MemorizeCondidates(self):
         self.colony.sort(key=lambda x: x.fitness)
         condidate = []
-        condidate.append(copy.deepcopy(self.colony[0]))
-        k=1
-        for i in range(1,len(self.colony)):
+        k=0
+        for i in range(len(self.colony)):
             dk_3 = False
-            for Ant in self.condidates:
-                if(tuple(Ant.path)==tuple(self.colony[i].path)):
+            for ant in condidate:
+                if(tuple(ant.path)==tuple(self.colony[i].path)):
                     dk_3 = True
                     break
             if(dk_3!=True):
-                self.condidates.append(copy.deepcopy(self.colony[i]))
+                condidate.append(copy.deepcopy(self.colony[i]))
                 k=k+1
             if(k==self.K_paths):
                 break
         self.condidates.extend(copy.deepcopy(condidate))
 
-    def GetBest(self,iter):
-        self.best.clear()
+    def GetBest(self,iteration):
         self.condidates.sort(key=lambda x: x.fitness)
-        self.best.append(copy.deepcopy(self.condidates[0]))
-        k=1
-        for i in range(1,len(self.condidates)):
+        self.best.clear()
+        k=0
+        for i in range(len(self.condidates)):
             dk_3 = False
             for ant in self.best:
                 if(tuple(ant.path)==tuple(self.condidates[i].path)):
@@ -164,36 +163,41 @@ class ACO:
                 k=k+1
             if(k==self.K_paths):
                 break
-        file1 = open('wires.txt','r')
-        Lines = file1.readlines()
-        count = 0
-        for line in Lines:
-            if(line.strip()[0] == "N"):
-                count += 1
-        file1.close()
-
-        f1 = open("wires.txt","a")
-        if(count==3):
-            f1.truncate(0)
-        stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(iter)]) + "\n"
-        f1.write(stt_0)
-        for i in range(len(self.best)):
-            stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
-            stt= stt+"\n"
-            f1.write(stt)
-        f1.close()
-
+        
         values = []
-        sttt = self.st+" "+ stt_0
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
-        chart = BarChart(values,sttt)
-        chart.Do()
+        self.lines.append(sum(values))
+
+        if(iteration==self.Max or iteration==25 or iteration==10):
+            file1 = open('wires.txt','r')
+            Lines = file1.readlines()
+            count = 0
+            for line in Lines:
+                if(line.strip()[0] == "N"):
+                    count += 1
+            file1.close()
+
+            f1 = open("wires.txt","a")
+            if(count==3):
+                f1.truncate(0)
+            stt_0 = ",".join(["N = "+str(self.N),"Max = "+str(self.Max), "(i = "+str(iteration)+")"]) + "\n"
+            f1.write(stt_0)
+            for i in range(len(self.best)):
+                stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
+                stt= stt+"\n"
+                f1.write(stt)
+            f1.close()
+
+            sttt = self.st+" "+ stt_0
+            chart = BarChart(values,sttt)
+            chart.Do()
 
     def Do(self):
         for i in range(self.Max):
             self.CreatePath()
             self.UpdatePheromone()
             self.MemorizeCondidates()
-            if(i==9 or i==24 or i==(self.Max-1)):
-                self.GetBest(i+1)
+            self.GetBest(i+1)
+            
+            

@@ -31,7 +31,7 @@ class BarChart:
         ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1, 1.5, 1, 1]))
         ax.bar3d(x,y,z,dx,dy,dz,color = colors[:NumberPaths],alpha = 0.7)
         ax.set_xlim(0,NumberPaths*2)
-        ax.set_ylim(0,NumberPaths*3+5)
+        ax.set_ylim(0,NumberPaths*3+0.5*NumberPaths)
         ax.view_init(10,10)
         ax.xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))

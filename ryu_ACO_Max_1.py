@@ -24,9 +24,10 @@ import random
 import time
 
 from Al_ACO_Max import ACO
+from Draw import draw
 
-N = 10
-Max = 100
+N = 15
+Max = 15
 K_paths = 10
 p = 0.2
 a = 0.6
@@ -79,6 +80,8 @@ class ProjectController(app_manager.RyuApp):
             st = "ACO_Max_1:"
             alg = ACO(self.adjacency,self.switches,src,dst,N, Max, K_paths, p, a, b, p0, Q, st)
             alg.Do()
+            ve = draw(alg.lines,[],[],Max,"Max")
+            ve.Do_2()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

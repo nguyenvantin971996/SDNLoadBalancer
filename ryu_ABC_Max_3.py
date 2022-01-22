@@ -23,6 +23,7 @@ import os
 import random
 import time
 from Al_ABC_Max import ABC
+from Draw import draw
 
 N = 60
 Max = 100
@@ -74,6 +75,8 @@ class ProjectController(app_manager.RyuApp):
             st = "ABC_Max_3:"
             alg = ABC(self.adjacency,self.switches,src,dst,N,Max,K_paths,st)
             alg.Do()
+            ve = draw(alg.lines,[],[],Max,"Max")
+            ve.Do_2()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

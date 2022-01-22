@@ -23,12 +23,13 @@ import random
 import time
 import copy
 from Al_GA import GA
+from Draw import draw
 
-N = 40
-Max = 50
+N = 30
+Max = 200
 K_paths = 10
-Pc = [0.1, 0.4, 0.8]
-Pm = 0.1
+Pc = [0.05, 0.8, 0.95]
+Pm = 0.5
 Ts = 5
 
 class ProjectController(app_manager.RyuApp):
@@ -83,6 +84,8 @@ class ProjectController(app_manager.RyuApp):
             alg.Do()
             alg1.Do()
             alg2.Do()
+            ve = draw(alg.lines,alg1.lines,alg2.lines,Pc,"Pc")
+            ve.Do()
             for gen in alg.best:
                 self.paths.append(gen.path)
                 self.pw.append(gen.fitness)

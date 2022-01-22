@@ -23,9 +23,10 @@ import random
 import time
 import copy
 from Al_GA_Max import GA
+from Draw_4 import draw
 
-N = 50
-Max = 500
+N = 60
+Max = [100]
 K_paths = 10
 Pc = 0.8
 Pm = 0.5
@@ -75,8 +76,10 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "GA_Max_3:"
-            alg = GA(self.adjacency,self.switches,src,dst, N, Max, K_paths, Pc, Pm, Ts, st)
+            alg = GA(self.adjacency,self.switches,src,dst, N, Max[0], K_paths, Pc, Pm, Ts, st)
             alg.Do()
+            ve = draw([alg.lines],Max,"Max")
+            ve.Do()
             for gen in alg.best:
                 self.paths.append(gen.path)
                 self.pw.append(gen.fitness)
