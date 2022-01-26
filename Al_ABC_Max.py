@@ -25,7 +25,7 @@ class ABC:
         self.Max = Max
         self.K_paths = K_paths
         self.population = [self.CreateSolution() for i in range(self.N)]
-        self.limit = int(N*len(switches)/2)
+        self.limit = int(math.sqrt(N+len(self.switches)))
         self.condidates = []
         self.best = []
         self.st = st
@@ -181,19 +181,7 @@ class ABC:
     def ScoutPhase(self):
         for i in range(self.N):
             if self.population[i].counter > self.limit:
-                mn = min(self.population[i].code)
-                mx = max(self.population[i].code)
-                self.population[i].code.clear()
-                path=[]
-                code = []
-                while(len(path)==0):
-                    code.clear()
-                    path.clear()
-                    code = copy.deepcopy([(mn+np.random.rand()*(mx-mn)) for i in range(len(self.switches))])
-                    path = copy.deepcopy(self.Decode(code))
-                self.population[i].code = copy.deepcopy(code)
-                self.population[i].path = copy.deepcopy(path)
-                self.population[i].fitness = self.Evaluate(self.population[i].path)
+                self.population[i] = copy.deepcopy(self.CreateSolution())
     
     def MemorizeCondidates(self):
         self.population.sort(key=lambda x: x.fitness)
