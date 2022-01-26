@@ -26,7 +26,7 @@ from Draw import draw
 
 N = [15, 30, 60]
 Max = 50
-K_paths = 10
+K_paths = 4
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -74,12 +74,12 @@ class ProjectController(app_manager.RyuApp):
             st = "ABC_N_1:"
             alg = ABC(self.adjacency,self.switches,src,dst,N[0],Max,K_paths,st)
             alg.Do()
-            alg1 = ABC(self.adjacency,self.switches,src,dst,N[1],Max,K_paths,st)
-            alg1.Do()
-            alg2 = ABC(self.adjacency,self.switches,src,dst,N[2],Max,K_paths,st)
-            alg2.Do()
-            ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
-            ve.Do()
+            # alg1 = ABC(self.adjacency,self.switches,src,dst,N[1],Max,K_paths,st)
+            # alg1.Do()
+            # alg2 = ABC(self.adjacency,self.switches,src,dst,N[2],Max,K_paths,st)
+            # alg2.Do()
+            # ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
+            # ve.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

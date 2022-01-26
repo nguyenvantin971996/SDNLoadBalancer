@@ -9,7 +9,7 @@
 SSLink::SSLink(Node *node1, Node *node2) :
     Link(node1, node2),
     delay(1),
-    bandwidth(100),
+    bandwidth(1),
     packetLossRate(0)
 {
     unselect();

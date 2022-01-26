@@ -72,8 +72,8 @@ class ABC:
             switch_min = 1
             min = float('inf')
             for switch in neighbor_switches:
-                if(code[switch-1]*self.weight_map[current_switch][switch] <= min):
-                    min = code[switch-1]*self.weight_map[current_switch][switch]
+                if(code[switch-1] <= min):
+                    min = code[switch-1]
                     switch_min = switch
             current_switch = switch_min
             path.append(current_switch)
@@ -127,7 +127,7 @@ class ABC:
                         code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
                     else:
                         code[ii] = solution.code[ii]
-                # code = self.Normalize(code)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             solution.code = copy.deepcopy(code)
             solution.path = copy.deepcopy(path)
@@ -166,7 +166,7 @@ class ABC:
                         code[ii] = solution.code[ii]+fi*(solution.code[ii]-self.population[coceg].code[ii])
                     else:
                         code[ii] = solution.code[ii]
-                # code = self.Normalize(code)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             solution.code = copy.deepcopy(code)
             solution.path = copy.deepcopy(path)
