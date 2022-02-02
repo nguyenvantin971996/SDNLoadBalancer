@@ -10,19 +10,20 @@ TableMetric::TableMetric(QWidget *parent) :
     ui(new Ui::TableMetric)
 {
     ui->setupUi(this);
-    QString Parameters[3];
-    int K_paths[3] = {0, 0, 0};
-    QList<double> Ds[3];
-    QList<double> I[3];
-    QList<double> AV[3];
-    QList<double> SD[3];
-    QList<double> MxVL[3];
-    QList<double> MnVL[3];
-    double J[3] = {0, 0 , 0};
-    double CD[3] = {0, 0 , 0};
-    double sum[3] = {0, 0 , 0};
+    QString N[4];
+    QString Max[4];
+    int K_paths[4] = {0, 0, 0};
+    QList<double> Ds[4];
+    QList<double> I[4];
+    QList<double> AV[4];
+    QList<double> SD[4];
+    QList<double> MxVL[4];
+    QList<double> MnVL[4];
+    double J[4] = {0, 0 , 0, 0};
+    double CD[4] = {0, 0 , 0, 0};
+    double sum[4] = {0, 0 , 0, 0};
 
-    QList<QList<double>> wires[3];
+    QList<QList<double>> wires[4];
 
     QString filename="../wires.txt";
         QFile file(filename);
@@ -36,13 +37,11 @@ TableMetric::TableMetric(QWidget *parent) :
             QString line = in.readLine();
             QStringList linelist;
             linelist = line.split(",");
-            if(line[0]=="N")
+            if(line[0]=="a")
             {
                 u++;
-                for(int x=0;x<=linelist.count()-1;x++)
-                {
-                    Parameters[u] = Parameters[u] + "\n" + linelist[x];
-                }
+                N[u] = linelist[1];
+                Max[u] = linelist[2];
                 continue;
             }
             else
@@ -61,7 +60,7 @@ TableMetric::TableMetric(QWidget *parent) :
                 wires[u].append(w);
             }
         }
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             double ss = 0;
             for(int x=0;x<=Ds[u].count()-2;x++)
@@ -74,7 +73,7 @@ TableMetric::TableMetric(QWidget *parent) :
             I[u].append(100-ss);
         }
 
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             for(int x=0;x<=Ds[u].count()-1;x++)
             {
@@ -84,7 +83,7 @@ TableMetric::TableMetric(QWidget *parent) :
             }
         }
 
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             for(int x=0;x<=Ds[u].count()-1;x++)
             {
@@ -100,7 +99,7 @@ TableMetric::TableMetric(QWidget *parent) :
             }
         }
 
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             for(int x=0;x<=Ds[u].count()-1;x++)
             {
@@ -120,65 +119,83 @@ TableMetric::TableMetric(QWidget *parent) :
                 MnVL[u].append(mn);
             }
         }
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             double jj = (1-Ds[u][0]/Ds[u][Ds[u].count()-1])*100;
             J[u] = int( jj * 100.0 ) / 100.0;
         }
         int num_row = 0;
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             num_row += Ds[u].count();
             K_paths[u] = Ds[u].count();
         }
 
     ui->tableWidget->setRowCount(num_row);
-    ui->tableWidget->setColumnCount(10);
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Parameters" << "K_paths" << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
-    ui->tableWidget->setSpan(0, 0, Ds[0].count(), 1);
+    ui->tableWidget->setColumnCount(11);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "N" << "Max" << "K_paths" << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
+    ui->tableWidget->setSpan(0, 0, Ds[0].count()+Ds[1].count(), 1);
     ui->tableWidget->setSpan(0, 1, Ds[0].count(), 1);
     ui->tableWidget->setSpan(0, 2, Ds[0].count(), 1);
-    ui->tableWidget->setSpan(0, 9, Ds[0].count(), 1);
+    ui->tableWidget->setSpan(0, 3, Ds[0].count(), 1);
+    ui->tableWidget->setSpan(0, 10, Ds[0].count(), 1);
 
-    ui->tableWidget->setSpan(Ds[0].count(), 0, Ds[1].count(), 1);
+//    ui->tableWidget->setSpan(Ds[0].count(), 0, Ds[1].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count(), 1, Ds[1].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count(), 2, Ds[1].count(), 1);
-    ui->tableWidget->setSpan(Ds[0].count(), 9, Ds[1].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count(), 3, Ds[1].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count(), 10, Ds[1].count(), 1);
 
-    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 0, Ds[2].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 0, Ds[2].count()+Ds[3].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 1, Ds[2].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 2, Ds[2].count(), 1);
-    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 9, Ds[2].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 3, Ds[2].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 10, Ds[2].count(), 1);
+
+//    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 0, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 1, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 2, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 3, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 10, Ds[3].count(), 1);
 
     int xxx = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
-        QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(Parameters[u]));
+        QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(N[u]));
         item2->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(xxx,0,item2);
         xxx+=Ds[u].count();
     }
 
+    int xxx1 = 0;
+    for(int u=0;u<=3;u++)
+    {
+        QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(Max[u]));
+        item2->setTextAlignment( Qt::AlignCenter );
+        ui->tableWidget->setItem(xxx1,1,item2);
+        xxx1+=Ds[u].count();
+    }
+
     int xx = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(K_paths[u]));
         item2->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(xx,1,item2);
+        ui->tableWidget->setItem(xx,2,item2);
         xx+=Ds[u].count();
     }
 
     int x1 = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(CD[u]));
         item2->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(x1,2,item2);
+        ui->tableWidget->setItem(x1,3,item2);
         x1+=Ds[u].count();
     }
 
     QList<double> Ds_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=Ds[u].count()-1;x++)
         {
@@ -189,11 +206,11 @@ TableMetric::TableMetric(QWidget *parent) :
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(Ds_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,3,itm);
+        ui->tableWidget->setItem(j,4,itm);
     }
 
     QList<double> I_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=I[u].count()-1;x++)
         {
@@ -204,11 +221,11 @@ TableMetric::TableMetric(QWidget *parent) :
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(I_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,4,itm);
+        ui->tableWidget->setItem(j,5,itm);
     }
 
     QList<double> AV_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=AV[u].count()-1;x++)
         {
@@ -219,11 +236,11 @@ TableMetric::TableMetric(QWidget *parent) :
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(AV_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,5,itm);
+        ui->tableWidget->setItem(j,6,itm);
     }
 
     QList<double> SD_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=SD[u].count()-1;x++)
         {
@@ -234,11 +251,11 @@ TableMetric::TableMetric(QWidget *parent) :
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(SD_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,6,itm);
+        ui->tableWidget->setItem(j,7,itm);
     }
 
     QList<double> MxVL_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=MxVL[u].count()-1;x++)
         {
@@ -249,11 +266,11 @@ TableMetric::TableMetric(QWidget *parent) :
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MxVL_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,7,itm);
+        ui->tableWidget->setItem(j,8,itm);
     }
 
     QList<double> MnVL_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=MnVL[u].count()-1;x++)
         {
@@ -264,14 +281,14 @@ TableMetric::TableMetric(QWidget *parent) :
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MnVL_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,8,itm);
+        ui->tableWidget->setItem(j,9,itm);
     }
     int x2 = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(J[u]));
         item2->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(x2,9,item2);
+        ui->tableWidget->setItem(x2,10,item2);
         x2+=Ds[u].count();
     }
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -285,19 +302,20 @@ TableMetric::~TableMetric()
 
 void TableMetric::on_horizontalSlider_valueChanged(int value)
 {
-    QString Parameters[3];
-    int K_paths[3] = {0, 0, 0};
-    QList<double> Ds[3];
-    QList<double> I[3];
-    QList<double> AV[3];
-    QList<double> SD[3];
-    QList<double> MxVL[3];
-    QList<double> MnVL[3];
-    double J[3] = {0, 0 , 0};
-    double CD[3] = {0, 0 , 0};
-    double sum[3] = {0, 0 , 0};
+    QString N[4];
+    QString Max[4];
+    int K_paths[4] = {0, 0, 0};
+    QList<double> Ds[4];
+    QList<double> I[4];
+    QList<double> AV[4];
+    QList<double> SD[4];
+    QList<double> MxVL[4];
+    QList<double> MnVL[4];
+    double J[4] = {0, 0 , 0, 0};
+    double CD[4] = {0, 0 , 0, 0};
+    double sum[4] = {0, 0 , 0, 0};
 
-    QList<QList<double>> wires[3];
+    QList<QList<double>> wires[4];
 
     QString filename="../wires.txt";
         QFile file(filename);
@@ -311,13 +329,11 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
             QString line = in.readLine();
             QStringList linelist;
             linelist = line.split(",");
-            if(line[0]=="N")
+            if(line[0]=="a")
             {
                 u++;
-                for(int x=0;x<=linelist.count()-1;x++)
-                {
-                    Parameters[u] = Parameters[u] + "\n" + linelist[x];
-                }
+                N[u] = linelist[1];
+                Max[u] = linelist[2];
                 continue;
             }
             else
@@ -343,7 +359,7 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
                 wires[u].append(w);
             }
         }
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             double ss = 0;
             for(int x=0;x<=Ds[u].count()-2;x++)
@@ -356,7 +372,7 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
             I[u].append(100-ss);
         }
 
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             for(int x=0;x<=Ds[u].count()-1;x++)
             {
@@ -366,7 +382,7 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
             }
         }
 
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             for(int x=0;x<=Ds[u].count()-1;x++)
             {
@@ -382,7 +398,7 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
             }
         }
 
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             for(int x=0;x<=Ds[u].count()-1;x++)
             {
@@ -402,65 +418,83 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
                 MnVL[u].append(mn);
             }
         }
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             double jj = (1-Ds[u][0]/Ds[u][Ds[u].count()-1])*100;
             J[u] = int( jj * 100.0 ) / 100.0;
         }
         int num_row = 0;
-        for(int u=0;u<=2;u++)
+        for(int u=0;u<=3;u++)
         {
             num_row += Ds[u].count();
             K_paths[u] = Ds[u].count();
         }
 
     ui->tableWidget->setRowCount(num_row);
-    ui->tableWidget->setColumnCount(10);
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Parameters" << "K_paths" << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
-    ui->tableWidget->setSpan(0, 0, Ds[0].count(), 1);
+    ui->tableWidget->setColumnCount(11);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "N" << "Max" << "K_paths" << "CD" << "Ds" << "I, %" << "AV" << "SD"<< "MxVL" << "MnVL" << "J, %");
+    ui->tableWidget->setSpan(0, 0, Ds[0].count()+Ds[1].count(), 1);
     ui->tableWidget->setSpan(0, 1, Ds[0].count(), 1);
     ui->tableWidget->setSpan(0, 2, Ds[0].count(), 1);
-    ui->tableWidget->setSpan(0, 9, Ds[0].count(), 1);
+    ui->tableWidget->setSpan(0, 3, Ds[0].count(), 1);
+    ui->tableWidget->setSpan(0, 10, Ds[0].count(), 1);
 
-    ui->tableWidget->setSpan(Ds[0].count(), 0, Ds[1].count(), 1);
+//    ui->tableWidget->setSpan(Ds[0].count(), 0, Ds[1].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count(), 1, Ds[1].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count(), 2, Ds[1].count(), 1);
-    ui->tableWidget->setSpan(Ds[0].count(), 9, Ds[1].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count(), 3, Ds[1].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count(), 10, Ds[1].count(), 1);
 
-    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 0, Ds[2].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 0, Ds[2].count()+Ds[3].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 1, Ds[2].count(), 1);
     ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 2, Ds[2].count(), 1);
-    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 9, Ds[2].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 3, Ds[2].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count(), 10, Ds[2].count(), 1);
+
+//    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 0, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 1, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 2, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 3, Ds[3].count(), 1);
+    ui->tableWidget->setSpan(Ds[0].count()+Ds[1].count()+Ds[3].count(), 10, Ds[3].count(), 1);
 
     int xxx = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
-        QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(Parameters[u]));
+        QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(N[u]));
         item2->setTextAlignment( Qt::AlignCenter );
         ui->tableWidget->setItem(xxx,0,item2);
         xxx+=Ds[u].count();
     }
 
+    int xxx1 = 0;
+    for(int u=0;u<=3;u++)
+    {
+        QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(Max[u]));
+        item2->setTextAlignment( Qt::AlignCenter );
+        ui->tableWidget->setItem(xxx1,1,item2);
+        xxx1+=Ds[u].count();
+    }
+
     int xx = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(K_paths[u]));
         item2->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(xx,1,item2);
+        ui->tableWidget->setItem(xx,2,item2);
         xx+=Ds[u].count();
     }
 
     int x1 = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(CD[u]));
         item2->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(x1,2,item2);
+        ui->tableWidget->setItem(x1,3,item2);
         x1+=Ds[u].count();
     }
 
     QList<double> Ds_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=Ds[u].count()-1;x++)
         {
@@ -471,11 +505,11 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(Ds_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,3,itm);
+        ui->tableWidget->setItem(j,4,itm);
     }
 
     QList<double> I_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=I[u].count()-1;x++)
         {
@@ -486,11 +520,11 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(I_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,4,itm);
+        ui->tableWidget->setItem(j,5,itm);
     }
 
     QList<double> AV_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=AV[u].count()-1;x++)
         {
@@ -501,11 +535,11 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(AV_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,5,itm);
+        ui->tableWidget->setItem(j,6,itm);
     }
 
     QList<double> SD_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=SD[u].count()-1;x++)
         {
@@ -516,11 +550,11 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(SD_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,6,itm);
+        ui->tableWidget->setItem(j,7,itm);
     }
 
     QList<double> MxVL_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=MxVL[u].count()-1;x++)
         {
@@ -531,11 +565,11 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MxVL_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,7,itm);
+        ui->tableWidget->setItem(j,8,itm);
     }
 
     QList<double> MnVL_2;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         for(int x=0;x<=MnVL[u].count()-1;x++)
         {
@@ -546,14 +580,14 @@ void TableMetric::on_horizontalSlider_valueChanged(int value)
     {
         QTableWidgetItem *itm = new QTableWidgetItem(tr("%1").arg(MnVL_2[j]));
         itm->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(j,8,itm);
+        ui->tableWidget->setItem(j,9,itm);
     }
     int x2 = 0;
-    for(int u=0;u<=2;u++)
+    for(int u=0;u<=3;u++)
     {
         QTableWidgetItem *item2 = new QTableWidgetItem(tr("%1").arg(J[u]));
         item2->setTextAlignment( Qt::AlignCenter );
-        ui->tableWidget->setItem(x2,9,item2);
+        ui->tableWidget->setItem(x2,10,item2);
         x2+=Ds[u].count();
     }
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
