@@ -11,9 +11,9 @@ class BarChart:
         self.stt = stt + ".png"
 
     def Do(self):
+        NumberPaths = len(self.values)
         fig = plt.figure(figsize=(10,8))
         ax = plt.axes(projection="3d")
-        NumberPaths = len(self.values)
         x = np.zeros(NumberPaths)+NumberPaths
         y = np.array(range(NumberPaths))*2.8+3
         z = np.zeros(NumberPaths)
@@ -51,7 +51,10 @@ class BarChart:
         ax.yaxis.set_ticklabels(ylabels)
         for i in range(NumberPaths):
             ax.text(x[i]-0.05*NumberPaths, y[i]-0.75/NumberPaths, dz[i], str(dz[i]),color='black',size = 8, backgroundcolor= 'orange', rotation='vertical', horizontalalignment='left', verticalalignment='bottom')
+        ax.set_zlabel("Ds")
+        ax.set_ylabel("Path")
         plt.savefig(self.stt,dpi = 200)
-#         plt.show()
-# cc = BarChart([430,450,440,470,450,440,470,450,440,470],"xxx")
+        # plt.show()
+
+# cc = BarChart([430,450,440,470,450,440],"xxx")
 # cc.Do()

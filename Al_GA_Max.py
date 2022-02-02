@@ -126,12 +126,17 @@ class GA:
                 point_mutation = random.choice(ls)
                 current_switch = parents.path[point_mutation]
                 del parents.path[point_mutation+1:]
+                save_parents = copy.deepcopy(parents.path)
                 while(current_switch!=self.dst):
-                    neighbor_switches = set(self.adjacency[current_switch].keys())
+                    neighbor_switches = set(self.adjacency[current_switch].keys())-set(parents.path)
                     neighbor_switches = list(neighbor_switches)
-                    next_switch = random.choice(neighbor_switches)
-                    parents.path.append(next_switch)
-                    current_switch = next_switch
+                    if(len(neighbor_switches)==0):
+                        parents.path = copy.deepcopy(save_parents)
+                        current_switch = parents.path[point_mutation]
+                    else:
+                        next_switch = random.choice(neighbor_switches)
+                        parents.path.append(next_switch)
+                        current_switch = next_switch
                 parents.fitness = self.Evaluate(parents.path)
                 self.population[i] = copy.deepcopy(parents)
                 

@@ -24,8 +24,8 @@ import time
 from Al_ABC import ABC
 from Draw import draw
 
-N = [25, 50, 100]
-Max = 100
+N = [15,30]
+Max = [10,100]
 K_paths = 10
 
 class ProjectController(app_manager.RyuApp):
@@ -71,16 +71,18 @@ class ProjectController(app_manager.RyuApp):
 
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
-            st = "ABC_N_2:"
-            alg = ABC(self.adjacency,self.switches,src,dst,N[0],Max,K_paths,st)
-            alg.Do()
-            alg1 = ABC(self.adjacency,self.switches,src,dst,N[1],Max,K_paths,st)
-            alg1.Do()
-            alg2 = ABC(self.adjacency,self.switches,src,dst,N[2],Max,K_paths,st)
-            alg2.Do()
-            ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
-            ve.Do()
-            for solution in alg.best:
+            st = "al_ABC_N_2"
+            alg_00 = ABC(self.adjacency,self.switches,src,dst,N[0],Max[0],K_paths,st)
+            alg_00.Do()
+            alg_01 = ABC(self.adjacency,self.switches,src,dst,N[0],Max[1],K_paths,st)
+            alg_01.Do()
+            alg_10 = ABC(self.adjacency,self.switches,src,dst,N[1],Max[0],K_paths,st)
+            alg_10.Do()
+            alg_11 = ABC(self.adjacency,self.switches,src,dst,N[1],Max[1],K_paths,st)
+            alg_11.Do()
+            # ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
+            # ve.Do()
+            for solution in alg_11.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)
             f=open("demo.txt","w")

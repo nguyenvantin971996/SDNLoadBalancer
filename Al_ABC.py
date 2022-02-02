@@ -226,14 +226,14 @@ class ABC:
             Lines = file1.readlines()
             count = 0
             for line in Lines:
-                if(line.strip()[0] == "N"):
+                if(line.strip()[0] == "a"):
                     count += 1
             file1.close()
 
             f1 = open("wires.txt","a")
-            if(count==3):
+            if(count==4):
                 f1.truncate(0)
-            stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max)]) + "\n"
+            stt_0 = ",".join([self.st,str(self.N),str(self.Max)]) + "\n"
             f1.write(stt_0)
             for i in range(len(self.best)):
                 stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
@@ -241,9 +241,9 @@ class ABC:
                 f1.write(stt)
             f1.close()
 
-            sttt = self.st+" "+ stt_0
-            # chart = BarChart(values,sttt)
-            # chart.Do()
+            sttt = stt_0+"K_paths = "+str(self.K_paths)
+            chart = BarChart(values,sttt)
+            chart.Do()
 
     def Do(self):
         self.MemorizeCondidates()
