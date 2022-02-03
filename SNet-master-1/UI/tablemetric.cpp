@@ -62,15 +62,33 @@ TableMetric::TableMetric(QWidget *parent) :
         }
         for(int u=0;u<=3;u++)
         {
+            if(Ds[u][Ds[u].count()-2]==Ds[u][Ds[u].count()-1])
+            {
             double ss = 0;
-            for(int x=0;x<=Ds[u].count()-2;x++)
+            for(int x=0;x<=Ds[u].count()-3;x++)
             {
                 double t2 = 100*(1/Ds[u][x])/sum[u];
-                t2 = int( t2 * 10.0 ) / 10.0;
+                t2 = round( t2 * 10.0 ) / 10.0;
                 ss+=t2;
                 I[u].append(t2);
             }
-            I[u].append(100-ss);
+
+                I[u].append((100-ss)/2);
+                I[u].append((100-ss)/2);
+            }
+            else
+            {
+                double ss = 0;
+                for(int x=0;x<=Ds[u].count()-2;x++)
+                {
+                    double t2 = 100*(1/Ds[u][x])/sum[u];
+                    t2 = round( t2 * 10.0 ) / 10.0;
+                    ss+=t2;
+                    I[u].append(t2);
+                }
+
+                    I[u].append(100-ss);
+            }
         }
 
         for(int u=0;u<=3;u++)
@@ -78,7 +96,7 @@ TableMetric::TableMetric(QWidget *parent) :
             for(int x=0;x<=Ds[u].count()-1;x++)
             {
                 double t3 = Ds[u][x]/(wires[u][x].count());
-                t3 = int( t3 * 10.0 ) / 10.0;
+                t3 = round( t3 * 10.0 ) / 10.0;
                 AV[u].append(t3);
             }
         }
@@ -94,7 +112,7 @@ TableMetric::TableMetric(QWidget *parent) :
                     sum_2+= (t4-wires[u][x][y])*(t4-wires[u][x][y]);
                 }
                 double sdd = sqrt(sum_2/(wires[u][x].count()));
-                sdd = int( sdd * 10.0 ) / 10.0;
+                sdd = round( sdd * 10.0 ) / 10.0;
                 SD[u].append(sdd);
             }
         }
@@ -122,7 +140,7 @@ TableMetric::TableMetric(QWidget *parent) :
         for(int u=0;u<=3;u++)
         {
             double jj = (1-Ds[u][0]/Ds[u][Ds[u].count()-1])*100;
-            J[u] = int( jj * 100.0 ) / 100.0;
+            J[u] = round( jj * 100.0 ) / 100.0;
         }
         int num_row = 0;
         for(int u=0;u<=3;u++)

@@ -52,7 +52,7 @@ class BarChart:
         for i in range(NumberPaths):
             ax.text(x[i]-0.05*NumberPaths, y[i]-0.75/NumberPaths, dz[i], str(dz[i]),color='black',size = 8, backgroundcolor= 'orange', rotation='vertical', horizontalalignment='left', verticalalignment='bottom')
         ax.set_zlabel("Ds")
-        ax.set_ylabel("Path")
+        ax.set_ylabel("Path No.")
         plt.savefig(self.stt,dpi = 200)
         # plt.show()
 
