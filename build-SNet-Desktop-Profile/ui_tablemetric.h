@@ -34,7 +34,7 @@ public:
     {
         if (TableMetric->objectName().isEmpty())
             TableMetric->setObjectName(QString::fromUtf8("TableMetric"));
-        TableMetric->resize(1000, 1200);
+        TableMetric->resize(1000, 1800);
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);

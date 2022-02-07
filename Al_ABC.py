@@ -231,7 +231,7 @@ class ABC:
             file1.close()
 
             f1 = open("wires.txt","a")
-            if(count==4):
+            if(count==6):
                 f1.truncate(0)
             stt_0 = ",".join([self.st,str(self.N),str(self.Max)]) + "\n"
             f1.write(stt_0)
