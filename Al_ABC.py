@@ -30,6 +30,7 @@ class ABC:
         self.best = []
         self.st = st
         self.lines = []
+        self.values = []
     
     def GetWeightMap(self):
         weight_map={}
@@ -215,13 +216,11 @@ class ABC:
                 k=k+1
             if(k==self.K_paths):
                 break
-        
-        values = []
-        for x in range(len(self.best)):
-            values.append(self.best[x].fitness)
-        self.lines.append(sum(values))
 
         if(iteration==self.Max):
+            for x in range(len(self.best)):
+                self.values.append(self.best[x].fitness)
+            self.lines.append(sum(self.values))
             file1 = open('wires.txt','r')
             Lines = file1.readlines()
             count = 0
@@ -241,9 +240,9 @@ class ABC:
                 f1.write(stt)
             f1.close()
 
-            sttt = stt_0+"K_paths = "+str(self.K_paths)
-            chart = BarChart(values,sttt)
-            chart.Do()
+            # sttt = stt_0+"K_paths = "+str(self.K_paths)
+            # chart = BarChart(values,sttt)
+            # chart.Do()
 
     def Do(self):
         self.MemorizeCondidates()
