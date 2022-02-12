@@ -209,7 +209,7 @@ a = 0.6
 b = 0.4
 p0 = 0.3
 Q = 1
-st = "ACO_N_2_chart:"
+st = "ACO_N_2_chart"
 pr = [str(i) for i in N]
 pr.reverse()
 pr.append("N")
