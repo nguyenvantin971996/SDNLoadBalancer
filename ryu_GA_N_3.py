@@ -82,8 +82,7 @@ class ProjectController(app_manager.RyuApp):
             alg1.Do()
             alg2 = GA(self.adjacency,self.switches,src,dst, N[2], Max, K_paths, Pc, Pm, Ts, st)
             alg2.Do()
-            ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
-            ve.Do()
+            
             for gen in alg.best:
                 self.paths.append(gen.path)
                 self.pw.append(gen.fitness)

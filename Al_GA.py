@@ -2,7 +2,7 @@ import numpy as np
 import random
 import math
 import copy
-from DrawChart import BarChart
+from DrawChart_1 import BarChart
 
 class Genome(object):
     def __init__(self):
@@ -27,7 +27,6 @@ class GA:
         self.best = []
         self.st = st
         self.Ts = Ts
-        self.lines = []
     
     def GetWeightMap(self):
         weight_map={}
@@ -167,7 +166,7 @@ class GA:
                 break
         self.condidates.extend(copy.deepcopy(condidate))
     
-    def GetBest(self,iteration):
+    def GetBest(self):
         self.condidates.sort(key=lambda x: x.fitness)
         self.best.clear()
         k=0
@@ -182,44 +181,36 @@ class GA:
                 k=k+1
             if(k==self.K_paths):
                 break
-
         values = []
         for x in range(len(self.best)):
             values.append(self.best[x].fitness)
-        self.lines.append(sum(values))
+        file1 = open('wires.txt','r')
+        Lines = file1.readlines()
+        count = 0
+        for line in Lines:
+            if(line.strip()[0] == "N"):
+                count += 1
+        file1.close()
 
-        if(iteration==self.Max):
-            file1 = open('wires.txt','r')
-            Lines = file1.readlines()
-            count = 0
-            for line in Lines:
-                if(line.strip()[0] == "N"):
-                    count += 1
-            file1.close()
+        f1 = open("wires.txt","a")
+        if(count==3):
+            f1.truncate(0)
+        stt_0 = ",".join(["N = "+str(self.N),"Max = "+str(self.Max), "Pc = "+str(self.Pc), "Pm = "+str(self.Pm)]) + "\n"
+        f1.write(stt_0)
+        for i in range(len(self.best)):
+            stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
+            stt = stt+"\n"
+            f1.write(stt)
+        f1.close()
 
-            f1 = open("wires.txt","a")
-            if(count==3):
-                f1.truncate(0)
-            stt_0 = ",".join(["N = "+str(self.N), "Max = "+str(self.Max), "Pc = "+str(self.Pc), "Pm = "+str(self.Pm),"Ts = "+str(self.Ts)]) + "\n"
-            f1.write(stt_0)
-            for i in range(len(self.best)):
-                stt = ",".join(str(self.weight_map[self.best[i].path[x]][self.best[i].path[x+1]]) for x in range(len(self.best[i].path) - 1))
-                stt = stt+"\n"
-                f1.write(stt)
-            f1.close()
-
-            sttt = self.st +" "+ stt_0
-            chart = BarChart(values,sttt)
-            chart.Do()
+        sttt = self.st +" "+ stt_0
+        chart = BarChart(values,sttt)
+        chart.Do()
     
     def Do(self):
-        self.MemorizeCondidates()
-        self.GetBest(0)
         for i in range(self.Max):
             self.Crossover()
             self.Mutation()
             self.Selection()
             self.MemorizeCondidates()
-            self.GetBest(i+1)
-            
-            
+        self.GetBest()

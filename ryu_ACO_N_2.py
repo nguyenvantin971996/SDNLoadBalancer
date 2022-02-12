@@ -83,8 +83,8 @@ class ProjectController(app_manager.RyuApp):
             alg1.Do()
             alg2 = ACO(self.adjacency,self.switches,src,dst,N[2], Max, K_paths, p, a, b, p0, Q, st)
             alg2.Do()
-            ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
-            ve.Do()
+            # ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
+            # ve.Do()
             for solution in alg.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)

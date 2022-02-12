@@ -39,7 +39,7 @@ class ACO:
         pheromone = copy.deepcopy(self.adjacency)
         for sw_1 in self.adjacency.keys():
             for sw_2 in self.adjacency[sw_1].keys():
-                pheromone[sw_1][sw_2] = 1
+                pheromone[sw_1][sw_2] = 1/self.weight_map[sw_1][sw_2]
         return pheromone
 
     def CreateProbability(self):
@@ -81,7 +81,7 @@ class ACO:
                     path.append(current_switch)
             self.colony[i].path = copy.deepcopy(path)
             self.colony[i].fitness = self.Evaluate(self.colony[i].path)
-            self.colony[i].delta = 1/self.colony[i].fitness
+            # self.colony[i].delta = 1/self.colony[i].fitness
 
     def GetNextSwitch(self, neighbor_switches, current_switch):
         sum = 0
@@ -121,6 +121,7 @@ class ACO:
         return calculatedFitness
     
     def UpdatePheromone(self):
+        # update local
         for sw_1 in self.pheromone.keys():
             for sw_2 in self.pheromone[sw_1].keys():
                 self.pheromone[sw_1][sw_2]=self.pheromone[sw_1][sw_2]*(1-self.p)
@@ -128,8 +129,15 @@ class ACO:
             for j in range(len(self.colony[i].path) - 1):
                 p1 = self.colony[i].path[j]
                 p2 = self.colony[i].path[j + 1]
-                self.pheromone[p1][p2] += self.colony[i].delta*self.Q
-                self.pheromone[p2][p1] += self.colony[i].delta*self.Q
+                self.pheromone[p1][p2] += self.p*self.Q/self.weight_map[p1][p2] 
+                self.pheromone[p2][p1] += self.p*self.Q/self.weight_map[p2][p1]
+        # update global
+        self.colony.sort(key=lambda x: x.fitness)
+        for j in range(len(self.colony[0].path) - 1):
+            p1 = self.colony[0].path[j]
+            p2 = self.colony[0].path[j + 1]
+            self.pheromone[p1][p2] = (1-self.p)*self.pheromone[p1][p2] + self.p*1/self.colony[0].fitness
+            self.pheromone[p2][p1] = (1-self.p)*self.pheromone[p2][p1] + self.p*1/self.colony[0].fitness
      
     def MemorizeCondidates(self):
         self.colony.sort(key=lambda x: x.fitness)

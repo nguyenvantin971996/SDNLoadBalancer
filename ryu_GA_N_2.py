@@ -23,13 +23,12 @@ import random
 import time
 
 from Al_GA import GA
-from Draw import draw
 
-N = [15, 50, 100]
+N = [10,20,30]
 Max = 100
-Pc = 0.5
-Pm = 0.5
 K_paths = 10
+Pc = 0.9
+Pm = 0.9
 Ts = 3
 
 class ProjectController(app_manager.RyuApp):
@@ -76,15 +75,13 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "GA_N_2:"
-            alg = GA(self.adjacency,self.switches,src,dst, N[0], Max, K_paths, Pc, Pm, Ts, st)
+            alg = GA(self.adjacency,self.switches,dst, src, N[0], Max, K_paths, Pc, Pm, Ts, st)
             alg.Do()
-            alg1 = GA(self.adjacency,self.switches,src,dst, N[1], Max, K_paths, Pc, Pm, Ts, st)
+            alg1 = GA(self.adjacency,self.switches,dst, src, N[1], Max, K_paths, Pc, Pm, Ts, st)
             alg1.Do()
-            alg2 = GA(self.adjacency,self.switches,src,dst, N[2], Max, K_paths, Pc, Pm, Ts, st)
+            alg2 = GA(self.adjacency,self.switches,dst, src, N[2], Max, K_paths, Pc, Pm, Ts, st)
             alg2.Do()
-            ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
-            ve.Do()
-            for gen in alg.best:
+            for gen in alg2.best:
                 self.paths.append(gen.path)
                 self.pw.append(gen.fitness)
             f=open("demo.txt","w")

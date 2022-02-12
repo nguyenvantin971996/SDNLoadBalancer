@@ -108,7 +108,7 @@ QString MainWindow::getFileNameFromOpenedFilePath()
 
 void MainWindow::updateWindowTitle()
 {
-    this->setWindowTitle(QString("SDN Topology [") +
+    this->setWindowTitle(QString("SDNLoadBalancer [") +
                          getFileNameFromOpenedFilePath() +
                          QString("]"));
 }

@@ -24,7 +24,7 @@ import time
 from Al_ABC import ABC
 from DrawChart import BarChart
 
-N = [15,30,60]
+N = [10,30,100]
 Max = [10,100]
 K_paths = 10
 
@@ -72,27 +72,27 @@ class ProjectController(app_manager.RyuApp):
     def install_paths(self, src, first_port, dst, last_port, ip_src, ip_dst):
         if(len(self.paths)==0):
             st = "al_ABC_N_2"
-            alg_00 = ABC(self.adjacency,self.switches,src,dst,N[0],Max[0],K_paths,st)
+            alg_00 = ABC(self.adjacency,self.switches,dst,src,N[0],Max[0],K_paths,st)
             alg_00.Do()
-            alg_01 = ABC(self.adjacency,self.switches,src,dst,N[0],Max[1],K_paths,st)
+            alg_01 = ABC(self.adjacency,self.switches,dst,src,N[0],Max[1],K_paths,st)
             alg_01.Do()
-            chart = BarChart(alg_00.values,alg_01.values,st+"-15")
+            chart = BarChart(alg_00.values,alg_01.values,st+"-10")
             chart.Do()
-            alg_10 = ABC(self.adjacency,self.switches,src,dst,N[1],Max[0],K_paths,st)
+            alg_10 = ABC(self.adjacency,self.switches,dst,src,N[1],Max[0],K_paths,st)
             alg_10.Do()
-            alg_11 = ABC(self.adjacency,self.switches,src,dst,N[1],Max[1],K_paths,st)
+            alg_11 = ABC(self.adjacency,self.switches,dst,src,N[1],Max[1],K_paths,st)
             alg_11.Do()
             chart1 = BarChart(alg_10.values,alg_11.values,st+"-30")
             chart1.Do()
-            alg_20 = ABC(self.adjacency,self.switches,src,dst,N[2],Max[0],K_paths,st)
+            alg_20 = ABC(self.adjacency,self.switches,dst,src,N[2],Max[0],K_paths,st)
             alg_20.Do()
-            alg_21 = ABC(self.adjacency,self.switches,src,dst,N[2],Max[1],K_paths,st)
+            alg_21 = ABC(self.adjacency,self.switches,dst,src,N[2],Max[1],K_paths,st)
             alg_21.Do()
-            chart2 = BarChart(alg_20.values,alg_21.values,st+"-60")
+            chart2 = BarChart(alg_20.values,alg_21.values,st+"-100")
             chart2.Do()
             # ve = draw(alg.lines,alg1.lines,alg2.lines,N,"N")
             # ve.Do()
-            for solution in alg_11.best:
+            for solution in alg_21.best:
                 self.paths.append(solution.path)
                 self.pw.append(solution.fitness)
             f=open("demo.txt","w")
