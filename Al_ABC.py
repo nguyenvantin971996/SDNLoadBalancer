@@ -2,7 +2,7 @@ import numpy as np
 import random
 import math
 import copy
-from DrawChart import BarChart
+from DrawChart_1 import BarChart
 
 class Solution(object):
     def __init__(self):
@@ -240,9 +240,9 @@ class ABC:
                 f1.write(stt)
             f1.close()
 
-            # sttt = stt_0+"K_paths = "+str(self.K_paths)
-            # chart = BarChart(values,sttt)
-            # chart.Do()
+            sttt = stt_0+"K_paths = "+str(self.K_paths)
+            chart = BarChart(self.values,sttt)
+            chart.Do()
 
     def Do(self):
         self.MemorizeCondidates()
