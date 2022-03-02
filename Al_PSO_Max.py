@@ -60,9 +60,9 @@ class PSO:
             path = copy.deepcopy(self.Decode(code))
         newSolution.code = copy.deepcopy(code)
         newSolution.path = copy.deepcopy(path)
-        newSolution.velocity = [ i*0.1 for i in newSolution.code]
+        newSolution.velocity = [random.uniform(-1,1) for i in newSolution.code]
         newSolution.fitness = self.Evaluate(newSolution.path)
-        newSolution.best_local_code= [0 for i in range(len(self.switches))]
+        newSolution.best_local_code= copy.deepcopy(code)
         newSolution.best_local_fitness = newSolution.fitness
         return newSolution
     
@@ -79,8 +79,8 @@ class PSO:
             switch_min = 1
             min = float('inf')
             for switch in neighbor_switches:
-                if(code[switch-1]*self.weight_map[current_switch][switch] <= min):
-                    min = code[switch-1]*self.weight_map[current_switch][switch]
+                if(code[switch-1] <= min):
+                    min = code[switch-1]
                     switch_min = switch
             current_switch = switch_min
             path.append(current_switch)
@@ -118,12 +118,14 @@ class PSO:
             path = []
             while(len(path)==0):
                 for j in range(len(self.switches)):
+                    r0 = np.random.rand()
                     r1 = np.random.rand()
                     r2 = np.random.rand()
-                    velocity[j] = self.w*self.population[i].velocity[j] + self.c1*r1*(self.population[i].best_local_code[j]-self.population[i].code[j])+self.c2*r2*(self.best_global_solution.code[j]-self.population[i].code[j])
+                    velocity[j] = self.w*r0*self.population[i].velocity[j] + self.c1*r1*(self.population[i].best_local_code[j]-self.population[i].code[j])+self.c2*r2*(self.best_global_solution.code[j]-self.population[i].code[j])
+                velocity = self.Normalize(velocity)
                 for j in range(len(self.switches)):
                     code[j] = self.population[i].code[j] + velocity[j]
-                # code = self.Normalize(code)
+                code = self.Normalize(code)
                 path = copy.deepcopy(self.Decode(code))
             self.population[i].velocity = copy.deepcopy(velocity)
             self.population[i].code = copy.deepcopy(code)

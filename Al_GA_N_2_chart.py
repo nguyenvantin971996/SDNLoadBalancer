@@ -12,7 +12,7 @@ class Genome(object):
 class GA:
 
     def __init__(self, src, dst, N, Max, K_paths, Pc, Pm, Ts, st):
-        self.switches = [i for i in range(1,31)]
+        self.switches = [i for i in range(1,21)]
         self.src= src
         self.dst = dst
         self.weight_map= self.GetWeightMap()
@@ -211,7 +211,7 @@ class GA:
             self.MemorizeCondidates()
         self.GetBest()
 N = [10,25,50]
-Max = 25
+Max = 1000
 K_paths = 10
 Pc = 0.9
 Pm = 0.9
@@ -220,11 +220,11 @@ st = "GA_N_2"
 pr = [str(i) for i in N]
 pr.reverse()
 pr.append("N")
-alg = GA(1, 19, N[0], Max, K_paths, Pc, Pm, Ts, st)
+alg = GA(2, 7, N[0], Max, K_paths, Pc, Pm, Ts, st)
 alg.Do()
-alg1 = GA(1, 19, N[1], Max, K_paths, Pc, Pm, Ts, st)
+alg1 = GA(2, 7, N[1], Max, K_paths, Pc, Pm, Ts, st)
 alg1.Do()
-alg2 = GA(1, 19, N[2], Max, K_paths, Pc, Pm, Ts, st)
+alg2 = GA(2, 7, N[2], Max, K_paths, Pc, Pm, Ts, st)
 alg2.Do()
 chart = BarChart(alg2.values,alg1.values,alg.values,st,pr)
 chart.Do()

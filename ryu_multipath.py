@@ -62,7 +62,7 @@ class ProjectController(app_manager.RyuApp):
                     paths.append(path + [next])
                 else:
                     stack.append((next, path + [next]))
-        # print ("Available paths from ", src, " to ", dst, " : ", paths)
+        print ("Available paths from ", src, " to ", dst, " : ", paths)
         return paths
 
     def get_link_cost(self, s1, s2):
@@ -129,7 +129,7 @@ class ProjectController(app_manager.RyuApp):
             stt = ",".join(str(x) for x in path)
             f.write(stt+"\n")
             pw.append(self.get_path_cost(path))
-            # print (path, "cost = ", pw[len(pw) - 1])
+            print (path, "cost = ", pw[len(pw) - 1])
         f.close()
         sum_of_pw = sum(pw) * 1.0
         paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
