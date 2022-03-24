@@ -24,8 +24,8 @@ import time
 
 from Al_GA import GA
 
-N = [10, 20, 40]
-Max = 100
+N = [10, 20, 50]
+Max = 25
 K_paths = 10
 Pc = 0.9
 Pm = 0.9
@@ -79,10 +79,10 @@ class ProjectController(app_manager.RyuApp):
             if(dst<src):
                 src_0 = dst
                 dst_0 = src
-            alg_0 = GA(self.adjacency,self.switches,src_0,dst_0, N[0], Max, K_paths, Pc, Pm, Ts)
-            alg_0.Do()
-            alg_1 = GA(self.adjacency,self.switches,src_0,dst_0, N[1], Max, K_paths, Pc, Pm, Ts)
-            alg_1.Do()
+            # alg_0 = GA(self.adjacency,self.switches,src_0,dst_0, N[0], Max, K_paths, Pc, Pm, Ts)
+            # alg_0.Do()
+            # alg_1 = GA(self.adjacency,self.switches,src_0,dst_0, N[1], Max, K_paths, Pc, Pm, Ts)
+            # alg_1.Do()
             alg_2 = GA(self.adjacency,self.switches,src_0,dst_0, N[2], Max, K_paths, Pc, Pm, Ts)
             alg_2.Do()
             for gen in alg_2.best:
@@ -95,12 +95,12 @@ class ProjectController(app_manager.RyuApp):
                 stt= stt+","+str(self.pw[i])+"\n"
                 f.write(stt)
             f.close()
+            print("Result of GA:")
+            for i in range(len(self.paths)):
+                print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
         if(self.paths[0][0]!=src):
             for i in range(len(self.paths)):
                 self.paths[i].reverse()
-        print("Result of GA:")
-        for i in range(len(self.paths)):
-            print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
         path_with_ports = self.add_ports_to_paths(self.paths[0], first_port, last_port)
         switches_in_path = set().union(self.paths[0])
 
@@ -116,7 +116,7 @@ class ProjectController(app_manager.RyuApp):
             if node in path_with_ports:
                 in_port = path_with_ports[node][0]
                 out_port = path_with_ports[node][1]
-                if (out_port, self.pw[i]) not in ports[in_port]:
+                if (out_port, self.pw[0]) not in ports[in_port]:
                     ports[in_port].append((out_port, self.pw[0]))
 
             for in_port in ports:

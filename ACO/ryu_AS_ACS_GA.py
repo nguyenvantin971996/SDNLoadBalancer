@@ -86,12 +86,12 @@ class ProjectController(app_manager.RyuApp):
             if(dst<src):
                 src_0 = dst
                 dst_0 = src
-            alg_1 = AS(self.adjacency, self.switches,src_0,dst_0,N, Max, K_paths, p, a, b, Q)
-            alg_1.Do()
+            # alg_1 = AS(self.adjacency, self.switches,src_0,dst_0,N, Max, K_paths, p, a, b, Q)
+            # alg_1.Do()
             alg_2 = ACS(self.adjacency, self.switches,src_0,dst_0,N, Max, K_paths, p, a, b, p0, Q)
             alg_2.Do()
-            alg_3 = GA(self.adjacency, self.switches,src_0,dst_0,N, Max, K_paths, Pc, Pm, Ts)
-            alg_3.Do()
+            # alg_3 = GA(self.adjacency, self.switches,src_0,dst_0,N, Max, K_paths, Pc, Pm, Ts)
+            # alg_3.Do()
             for gen in alg_2.best:
                 self.paths.append(gen.path)
                 self.pw.append(gen.fitness)
@@ -102,9 +102,9 @@ class ProjectController(app_manager.RyuApp):
                 stt= stt+","+str(self.pw[i])+"\n"
                 f.write(stt)
             f.close()
-        print("Result of ACS:")
-        for i in range(len(self.paths)):
-            print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
+            print("Result of ACS:")
+            for i in range(len(self.paths)):
+                print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
         if(self.paths[0][0]!=src):
             for i in range(len(self.paths)):
                 self.paths[i].reverse()

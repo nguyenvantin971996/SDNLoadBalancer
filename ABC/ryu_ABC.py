@@ -98,12 +98,12 @@ class ProjectController(app_manager.RyuApp):
                 stt= stt+","+str(self.pw[i])+"\n"
                 f.write(stt)
             f.close()
+            print("Result of ABC:")
+            for i in range(len(self.paths)):
+                print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
         if(self.paths[0][0]!=src):
             for i in range(len(self.paths)):
                 self.paths[i].reverse()
-        print("Result of ABC:")
-        for i in range(len(self.paths)):
-            print ("Path",i+1,":",self.paths[i], " with cost = ", self.pw[i])
         path_with_ports = self.add_ports_to_paths(self.paths[0], first_port, last_port)
         switches_in_path = set().union(self.paths[0])
 
@@ -119,7 +119,7 @@ class ProjectController(app_manager.RyuApp):
             if node in path_with_ports:
                 in_port = path_with_ports[node][0]
                 out_port = path_with_ports[node][1]
-                if (out_port, self.pw[i]) not in ports[in_port]:
+                if (out_port, self.pw[0]) not in ports[in_port]:
                     ports[in_port].append((out_port, self.pw[0]))
 
             for in_port in ports:
