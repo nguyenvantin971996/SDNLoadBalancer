@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE topology>
+<Network>
+ <Hosts/>
+ <Switches>
+  <Switch y="342" x="241"/>
+  <Switch y="198" x="429"/>
+  <Switch y="196" x="741"/>
+  <Switch y="205" x="1095"/>
+  <Switch y="531" x="409"/>
+  <Switch y="530" x="756"/>
+  <Switch y="523" x="1074"/>
+  <Switch y="348" x="599"/>
+  <Switch y="344" x="915"/>
+  <Switch y="361" x="1273"/>
+ </Switches>
+ <Controllers/>
+ <SSLinks>
+  <Link bandwidth="1" node2="s2" delay="1" node1="s1" loss="0"/>
+  <Link bandwidth="1" node2="s3" delay="1" node1="s2" loss="0"/>
+  <Link bandwidth="1" node2="s3" delay="1" node1="s4" loss="0"/>
+  <Link bandwidth="1" node2="s4" delay="1" node1="s10" loss="0"/>
+  <Link bandwidth="1" node2="s1" delay="1" node1="s5" loss="0"/>
+  <Link bandwidth="1" node2="s5" delay="1" node1="s6" loss="0"/>
+  <Link bandwidth="1" node2="s6" delay="1" node1="s7" loss="0"/>
+  <Link bandwidth="1" node2="s7" delay="1" node1="s10" loss="0"/>
+  <Link bandwidth="1" node2="s2" delay="1" node1="s8" loss="0"/>
+  <Link bandwidth="1" node2="s8" delay="1" node1="s5" loss="0"/>
+  <Link bandwidth="1" node2="s3" delay="1" node1="s9" loss="0"/>
+  <Link bandwidth="1" node2="s6" delay="1" node1="s9" loss="0"/>
+  <Link bandwidth="1" node2="s8" delay="1" node1="s9" loss="0"/>
+  <Link bandwidth="1" node2="s9" delay="1" node1="s10" loss="0"/>
+  <Link bandwidth="1" node2="s1" delay="1" node1="s8" loss="0"/>
+ </SSLinks>
+ <CSLinks/>
+ <Texts/>
+</Network>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE topology>
+<Network>
+ <Hosts>
+  <Host mac="00:00:00:00:00:01" ip="10.0.0.1" x="50" y="682"/>
+  <Host mac="00:00:00:00:00:02" ip="10.0.0.2" x="1604" y="682"/>
+ </Hosts>
+ <Switches>
+  <Switch x="260" y="455"/>
+  <Switch x="465" y="236"/>
+  <Switch x="803" y="236"/>
+  <Switch x="1154" y="236"/>
+  <Switch x="465" y="682"/>
+  <Switch x="803" y="682"/>
+  <Switch x="1154" y="682"/>
+  <Switch x="571" y="455"/>
+  <Switch x="1050" y="455"/>
+  <Switch x="1380" y="455"/>
+ </Switches>
+ <Controllers>
+  <Controller port="6653" ip="127.0.0.1" x="574" y="57"/>
+ </Controllers>
+ <SSLinks>
+  <Link node1="s2" bandwidth="1" loss="0" node2="s1" delay="80"/>
+  <Link node1="s3" bandwidth="1" loss="0" node2="s2" delay="70"/>
+  <Link node1="s4" bandwidth="1" loss="0" node2="s3" delay="60"/>
+  <Link node1="s10" bandwidth="1" loss="0" node2="s4" delay="90"/>
+  <Link node1="s5" bandwidth="1" loss="0" node2="s6" delay="70"/>
+  <Link node1="s1" bandwidth="1" loss="0" node2="s5" delay="50"/>
+  <Link node1="s8" bandwidth="1" loss="0" node2="s1" delay="20"/>
+  <Link node1="s3" bandwidth="1" loss="0" node2="s8" delay="90"/>
+  <Link node1="s9" bandwidth="1" loss="0" node2="s3" delay="70"/>
+  <Link node1="s6" bandwidth="1" loss="0" node2="s9" delay="90"/>
+  <Link node1="s8" bandwidth="1" loss="0" node2="s6" delay="90"/>
+  <Link node1="s9" bandwidth="1" loss="0" node2="s10" delay="90"/>
+  <Link node1="s10" bandwidth="1" loss="0" node2="s7" delay="50"/>
+  <Link node1="s6" bandwidth="1" loss="0" node2="s7" delay="80"/>
+  <Link node1="s1" bandwidth="1" loss="0" node2="h1" delay="1"/>
+  <Link node1="s10" bandwidth="1" loss="0" node2="h2" delay="1"/>
+ </SSLinks>
+ <CSLinks>
+  <Link node1="c0" node2="s1"/>
+  <Link node1="c0" node2="s2"/>
+  <Link node1="c0" node2="s3"/>
+  <Link node1="c0" node2="s4"/>
+  <Link node1="c0" node2="s5"/>
+  <Link node1="c0" node2="s6"/>
+  <Link node1="c0" node2="s7"/>
+  <Link node1="c0" node2="s8"/>
+  <Link node1="c0" node2="s9"/>
+  <Link node1="c0" node2="s10"/>
+ </CSLinks>
+ <Texts/>
+</Network>

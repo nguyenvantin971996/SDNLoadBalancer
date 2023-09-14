@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Sleeping for 5 seconds"
+sleep 5
+echo "Stress testing at 10Mb/s for 10 seconds"
+iperf -c 10.0.0.7 -b 10M -t 10
+echo "Sleeping for 5 seconds"
+sleep 5
+echo "Stress testing at 25Mb/s for 10 seconds"
+iperf -c 10.0.0.5 -b 15M -t 10
+echo "Sleeping for 5 seconds"
+sleep 5
+echo "Stress testing at 50Mb/s for 10 seconds"
+iperf -c 10.0.0.4 -b 10M -t 10

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE topology>
+<Network>
+ <Hosts>
+  <Host mac="00:00:00:00:00:01" ip="10.0.0.1" y="514" x="245"/>
+  <Host mac="00:00:00:00:00:02" ip="10.0.0.2" y="514" x="1201"/>
+ </Hosts>
+ <Switches>
+  <Switch y="393" x="411"/>
+  <Switch y="275" x="568"/>
+  <Switch y="275" x="851"/>
+  <Switch y="514" x="568"/>
+  <Switch y="514" x="851"/>
+  <Switch y="393" x="708"/>
+  <Switch y="393" x="1020"/>
+ </Switches>
+ <Controllers>
+  <Controller ip="127.0.0.1" y="158" x="641" port="6653"/>
+ </Controllers>
+ <SSLinks>
+  <Link bandwidth="1" loss="0" node1="s2" delay="10" node2="s1"/>
+  <Link bandwidth="1" loss="0" node1="s3" delay="30" node2="s2"/>
+  <Link bandwidth="1" loss="0" node1="s7" delay="20" node2="s3"/>
+  <Link bandwidth="1" loss="0" node1="s5" delay="30" node2="s7"/>
+  <Link bandwidth="1" loss="0" node1="s4" delay="20" node2="s5"/>
+  <Link bandwidth="1" loss="0" node1="s1" delay="40" node2="s4"/>
+  <Link bandwidth="1" loss="0" node1="s6" delay="40" node2="s1"/>
+  <Link bandwidth="1" loss="0" node1="s2" delay="70" node2="s6"/>
+  <Link bandwidth="1" loss="0" node1="s3" delay="80" node2="s6"/>
+  <Link bandwidth="1" loss="0" node1="s7" delay="30" node2="s6"/>
+  <Link bandwidth="1" loss="0" node1="s5" delay="90" node2="s6"/>
+  <Link bandwidth="1" loss="0" node1="s4" delay="60" node2="s6"/>
+  <Link bandwidth="1" loss="0" node1="s1" delay="1" node2="h1"/>
+  <Link bandwidth="1" loss="0" node1="h2" delay="1" node2="s7"/>
+ </SSLinks>
+ <CSLinks>
+  <Link node1="c0" node2="s1"/>
+  <Link node1="c0" node2="s2"/>
+  <Link node1="c0" node2="s3"/>
+  <Link node1="c0" node2="s4"/>
+  <Link node1="c0" node2="s5"/>
+  <Link node1="c0" node2="s6"/>
+  <Link node1="c0" node2="s7"/>
+ </CSLinks>
+ <Texts/>
+</Network>

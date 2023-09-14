@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE topology>
+<Network>
+ <Hosts/>
+ <Switches>
+  <Switch x="347" y="348"/>
+  <Switch x="498" y="188"/>
+  <Switch x="800" y="190"/>
+  <Switch x="505" y="541"/>
+  <Switch x="812" y="537"/>
+  <Switch x="951" y="350"/>
+ </Switches>
+ <Controllers/>
+ <SSLinks>
+  <Link bandwidth="1" node1="s2" delay="1" loss="0" node2="s1"/>
+  <Link bandwidth="1" node1="s3" delay="1" loss="0" node2="s2"/>
+  <Link bandwidth="1" node1="s6" delay="1" loss="0" node2="s3"/>
+  <Link bandwidth="1" node1="s4" delay="1" loss="0" node2="s1"/>
+  <Link bandwidth="1" node1="s5" delay="1" loss="0" node2="s4"/>
+  <Link bandwidth="1" node1="s6" delay="1" loss="0" node2="s5"/>
+  <Link bandwidth="1" node1="s6" delay="1" loss="0" node2="s2"/>
+  <Link bandwidth="1" node1="s5" delay="1" loss="0" node2="s1"/>
+ </SSLinks>
+ <CSLinks/>
+ <Texts/>
+</Network>
